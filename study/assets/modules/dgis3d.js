@@ -214,13 +214,15 @@ define(function () {
         /**
          * 创建圆柱
          */
-        cylinder: function (r, l, angleX, angleY, angleZ) {
-            var cylinderMesh = new THREE.Mesh(new THREE.CylinderGeometry(r, r, l, 60, 60));
+        cylinder: function (r, l) {
+            //var cylinderMesh = new THREE.Mesh(new THREE.CylinderGeometry(r, r, l, r, r));
+            /*
             cylinderMesh.rotateX(angleX);
             cylinderMesh.rotateY(angleY);
             cylinderMesh.rotateZ(angleZ);
+            */
 
-            return cylinderMesh;
+            return new THREE.CylinderGeometry(r, r, l, r, r);
         },
         /**
          * 加载模型

@@ -124,7 +124,6 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
         dgis3d.scene.add(mesh);
         dgis3d.render();*/
 
-
         var h = 100;
 
         //砖墙
@@ -354,7 +353,6 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
     main.light = function () {
         dgis3d.scene.add(dgis3d.light.pointLight({ x: 250, y: 300, z: 200 }, "white", 1, 500));
         dgis3d.scene.add(dgis3d.light.pointLight({ x: 600, y: 300, z: 200 }, "white", 1, 500));
-
         dgis3d.render();
     };
 
