@@ -40,6 +40,8 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             main.orbitControls.autoRotate = false;//将自动旋转关闭
             main.clock = new THREE.Clock();//用于更新轨道控制器
 
+
+
             //加载场景
             main.floor();
 
@@ -48,35 +50,49 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             main.desktop();
 
             main.light();
+
+            /*
+            var dragControls = new THREE.DragControls( dgis3d.scene.children, dgis3d.camera, dgis3d.renderer.domElement );
+				dragControls.addEventListener( 'dragstart', function () {
+
+					main.orbitControls.enabled = false;
+
+				} );
+				dragControls.addEventListener( 'dragend', function () {
+
+					main.orbitControls.enabled = true;
+
+                } );                
+                */
         }).on("dblclick", function (e) {
             var material = dgis3d.material.colorMaterial("red", 0.6, true);
             dgis3d.event.getMesh(e, function (obj) {
                 //将上一次选中的模型颜色还原
-                for(var i=0;i<main.cacheObjs.length;i++){
-                    var oldObj=main.cacheObjs[i];
-                    oldObj.mesh.material=oldObj.material;
-                }               
+                for (var i = 0; i < main.cacheObjs.length; i++) {
+                    var oldObj = main.cacheObjs[i];
+                    oldObj.mesh.material = oldObj.material;
+                }
 
                 //清空上次模型缓存
-                main.cacheObjs=[];                 
-                
+                main.cacheObjs = [];
+
                 //选中模型添加渲染
                 if (obj instanceof THREE.Mesh) {
                     //普通模型添加缓存
-                    main.cacheObjs.push({mesh:obj,material:obj.material});
+                    main.cacheObjs.push({ mesh: obj, material: obj.material });
                     //设置选中渲染
-                    obj.material=material;   
-                }else{
+                    obj.material = material;
+                } else {
                     //外部模型读取子模型添加缓存
                     obj.traverse(function (child) {
                         if (child instanceof THREE.Mesh) {
-                            main.cacheObjs.push({mesh:child,material:child.material});
+                            main.cacheObjs.push({ mesh: child, material: child.material });
                             //设置选中渲染
-                            child.material=material;
+                            child.material = material;
                         }
                     });
                 }
-                
+
 
                 dgis3d.render();
 
