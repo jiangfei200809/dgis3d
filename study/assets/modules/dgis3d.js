@@ -26,10 +26,17 @@ define(function () {
         var dom = document.getElementById(domId);
         var width = dom.offsetWidth;
         var height = dom.offsetHeight;
-        main.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000000);
-        var pt = main.geometry.getPosition({ x: maxL / 2, y: maxW, z: maxH }, maxL, maxW, maxH);
+        main.camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 10000000);
+        main.camera.up =  new THREE.Vector3( 0, 1, 0 )
+        //var pt = main.geometry.getPosition({ x: maxL / 2, y: maxW, z: maxH }, maxL, maxW, maxH);
 
-        main.camera.position.set(maxL / 2, maxH * 2, maxW * 1);
+        //俯视图
+        main.camera.lookAt({
+            x: 0,
+            y: 0,
+            z: 0
+        });
+        //main.camera.position.set(0, maxH*10, 0);
 
         var light = new THREE.AmbientLight("#ccc");
 
@@ -46,6 +53,38 @@ define(function () {
         });
         main.renderer.setClearColor("#3d5c94");
         main.renderer.setSize(width, height);
+    };
+
+    /**
+     * 设置摄像机视图
+     * @param {s} type 0:俯视图 1：正视图 2：斜视图
+     */
+    main.view = function (type) {
+        var position={
+            x:0,
+            y:0,
+            z:0
+        };
+        switch (type) {
+            case 0:
+                //main.camera.position.set(0, main.sceneRange.h * 10, 0);
+                position.z=main.sceneRange.h * 10;
+                break;
+            case 1:
+                //main.camera.position.set(0, 0, main.sceneRange.w*1 );
+                position.y=main.sceneRange.w * 1;
+                break;
+            case 2:
+                //main.camera.position.set(main.sceneRange.l, main.sceneRange.h * 2, main.sceneRange.w);
+                position.x=main.sceneRange.l * 1;
+                position.y=main.sceneRange.w * 1;
+                position.z=main.sceneRange.h * 2;
+                break;
+        }
+
+        var pt=main.geometry.getPosition(position,main.sceneRange.l,main.sceneRange.w,main.sceneRange.h);
+        main.camera.position.set(pt.x,pt.y,pt.z);
+        main.render();
     };
 
     /**
@@ -227,7 +266,7 @@ define(function () {
         /**
          * 加载模型
          */
-        model: function (l, w, h, mtlPath, modelPath, angleX, angleY, angleZ, position, callBack) {
+        model: function (l, w, h, mtlPath, modelPath, angle, position, callBack) {
             var mtlLoader = new THREE.MTLLoader();
             mtlLoader.load(mtlPath, function (materials) {
                 materials.preload();
@@ -271,7 +310,7 @@ define(function () {
                     wrapper.add(obj);
                     //obj.position.set(-x,-y,-z);
 
-                    wrapper.rotation.set(angleX, angleY, angleZ);
+                    wrapper.rotation.set(angle.x, angle.y, angle.z);
 
                     callBack(wrapper);
                 });

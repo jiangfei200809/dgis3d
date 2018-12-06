@@ -77,11 +77,13 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                 main.cacheObjs = [];
 
                 //选中模型添加渲染
+                var cameraPostion;
                 if (obj instanceof THREE.Mesh) {
                     //普通模型添加缓存
                     main.cacheObjs.push({ mesh: obj, material: obj.material });
                     //设置选中渲染
                     obj.material = material;
+                    cameraPostion=obj.position;
                 } else {
                     //外部模型读取子模型添加缓存
                     obj.traverse(function (child) {
@@ -91,8 +93,16 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                             child.material = material;
                         }
                     });
+                    cameraPostion=obj.parent.position;
                 }
-
+            //跳转到选中模型
+            TweenMax.to(dgis3d.camera.position, 1, {
+                x: cameraPostion.x+10,
+                y: cameraPostion.y+10,
+                z: cameraPostion.z-10,
+                ease:Expo.easeInOut,
+                onComplete: function (){}
+           })
 
                 dgis3d.render();
 
@@ -315,50 +325,50 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
     };
 
     main.desktop = function () {
-        dgis3d.geometry.model(70, 30, 40, "../assets/models/desktop/desk/desk.mtl", "../assets/models/desktop/desk/desk.obj", 0, 0, 0, { x: 400, y: 50, z: 5 }, function (obj) {
+        dgis3d.geometry.model(70, 30, 40, "../assets/models/desktop/desk/desk.mtl", "../assets/models/desktop/desk/desk.obj", {x:0,y:0,z:0}, { x: 400, y: 50, z: 5 }, function (obj) {
             dgis3d.scene.add(obj);
             dgis3d.render();
         });
-        dgis3d.geometry.model(70, 30, 40, "../assets/models/desktop/desk/desk.mtl", "../assets/models/desktop/desk/desk.obj", 0, 0, 0, { x: 470, y: 50, z: 5 }, function (obj) {
+        dgis3d.geometry.model(70, 30, 40, "../assets/models/desktop/desk/desk.mtl", "../assets/models/desktop/desk/desk.obj", {x:0,y:0,z:0}, { x: 470, y: 50, z: 5 }, function (obj) {
             dgis3d.scene.add(obj);
             dgis3d.render();
         });
-        dgis3d.geometry.model(70, 30, 40, "../assets/models/desktop/desk/desk.mtl", "../assets/models/desktop/desk/desk.obj", 0, 0, 0, { x: 540, y: 50, z: 5 }, function (obj) {
-            dgis3d.scene.add(obj);
-            dgis3d.render();
-        });
-
-        dgis3d.geometry.model(30, 30, 50, "../assets/models/desktop/chair/chair.mtl", "../assets/models/desktop/chair/chair.obj", 0, Math.PI / 2, 0, { x: 420, y: 85, z: 5 }, function (obj) {
+        dgis3d.geometry.model(70, 30, 40, "../assets/models/desktop/desk/desk.mtl", "../assets/models/desktop/desk/desk.obj", {x:0,y:0,z:0}, { x: 540, y: 50, z: 5 }, function (obj) {
             dgis3d.scene.add(obj);
             dgis3d.render();
         });
 
-        dgis3d.geometry.model(30, 30, 50, "../assets/models/desktop/chair/chair.mtl", "../assets/models/desktop/chair/chair.obj", 0, Math.PI / 2, 0, { x: 490, y: 85, z: 5 }, function (obj) {
+        dgis3d.geometry.model(30, 30, 50, "../assets/models/desktop/chair/chair.mtl", "../assets/models/desktop/chair/chair.obj", {x:0,y: Math.PI / 2,z:0}, { x: 420, y: 85, z: 5 }, function (obj) {
             dgis3d.scene.add(obj);
             dgis3d.render();
         });
 
-        dgis3d.geometry.model(30, 30, 50, "../assets/models/desktop/chair/chair.mtl", "../assets/models/desktop/chair/chair.obj", 0, Math.PI / 2, 0, { x: 560, y: 85, z: 5 }, function (obj) {
+        dgis3d.geometry.model(30, 30, 50, "../assets/models/desktop/chair/chair.mtl", "../assets/models/desktop/chair/chair.obj",{x:0,y: Math.PI / 2,z:0}, { x: 490, y: 85, z: 5 }, function (obj) {
             dgis3d.scene.add(obj);
             dgis3d.render();
         });
 
-        dgis3d.geometry.model(10, 15, 10, "../assets/models/pc/macbook/macbook.mtl", "../assets/models/pc/macbook/macbook.obj", 0, Math.PI / 2, 0, { x: 430, y: 60, z: 45 }, function (obj) {
+        dgis3d.geometry.model(30, 30, 50, "../assets/models/desktop/chair/chair.mtl", "../assets/models/desktop/chair/chair.obj", {x:0,y: Math.PI / 2,z:0}, { x: 560, y: 85, z: 5 }, function (obj) {
             dgis3d.scene.add(obj);
             dgis3d.render();
         });
 
-        dgis3d.geometry.model(20, 15, 15, "../assets/models/pc/mac/mac.mtl", "../assets/models/pc/mac/mac.obj", 0, 0, 0, { x: 495, y: 60, z: 45 }, function (obj) {
+        dgis3d.geometry.model(10, 15, 10, "../assets/models/pc/macbook/macbook.mtl", "../assets/models/pc/macbook/macbook.obj", {x:0,y: Math.PI / 2,z:0}, { x: 430, y: 60, z: 45 }, function (obj) {
             dgis3d.scene.add(obj);
             dgis3d.render();
         });
 
-        dgis3d.geometry.model(20, 15, 15, "../assets/models/pc/mac/mac.mtl", "../assets/models/pc/mac/mac.obj", 0, 0, 0, { x: 570, y: 60, z: 45 }, function (obj) {
+        dgis3d.geometry.model(20, 15, 15, "../assets/models/pc/mac/mac.mtl", "../assets/models/pc/mac/mac.obj",{x:0,y:0,z:0}, { x: 495, y: 60, z: 45 }, function (obj) {
             dgis3d.scene.add(obj);
             dgis3d.render();
         });
 
-        dgis3d.geometry.model(5, 15, 5, "../assets/models/camare/hk/hk.mtl", "../assets/models/camare/hk/hk.obj", Math.PI / 4, Math.PI / 4, 0, { x: 8, y: 5, z: 80 }, function (obj) {
+        dgis3d.geometry.model(20, 15, 15, "../assets/models/pc/mac/mac.mtl", "../assets/models/pc/mac/mac.obj", {x:0,y:0,z:0}, { x: 570, y: 60, z: 45 }, function (obj) {
+            dgis3d.scene.add(obj);
+            dgis3d.render();
+        });
+
+        dgis3d.geometry.model(5, 15, 5, "../assets/models/camare/hk/hk.mtl", "../assets/models/camare/hk/hk.obj", {x:Math.PI / 4,y:Math.PI / 4,z:0}, { x: 8, y: 5, z: 80 }, function (obj) {
             dgis3d.scene.add(obj);
             dgis3d.render();
         });

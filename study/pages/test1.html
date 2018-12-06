@@ -19,119 +19,126 @@
     </style>
 
     <script src="../assets/js/jquery-1.10.2.min.js"></script>
-    <script src="../assets/js/three.js"></script>
+    <script src="../assets/plugins/threejs/three.js"></script>
+    <script src="../assets/js/esl.js"></script>
+
     <script>
-        var canvasMouseDown=false;
-        var preMousePt=null;
+        $(document).ready(function () {
+            require(["/assets/modules/dgis3d"], function (dgis3d) {
+                $("#stage").attr({ "width": 1000 + "px", "height": 1000 + "px" });
 
-        var renderer,scene, camera;
+                //场景
+                dgis3d.init("stage", 1000, 1000, 100);
 
-        function init() {
-            scene = new THREE.Scene(); // 创建场景
-
-            var width = document.getElementById('stage').offsetWidth;
-            var height = document.getElementById('stage').offsetHeight;
-            camera = new THREE.PerspectiveCamera(90, width / height, 1, 1000);
-            camera.position.set(200, 0, 1000);
-
-            var materials = [];
-            for (var i = 0; i < 6; i++) {
-                var texture = THREE.ImageUtils.loadTexture("../assets/images/" + i + ".png", {}, function () {
-                    renderer.render(scene, camera);
-                });
-                //texture.repeat.set(4, 4);
-                texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-
-                var meterial = new THREE.MeshLambertMaterial({
-                    map: texture,
-                    overdraw: true
-                });
-
-                materials.push(meterial);
-            }
-
-            var mesh = new THREE.Mesh(new THREE.CubeGeometry(150, 250, 150),
-                new THREE.MeshFaceMaterial(materials)
-            );
-
-            mesh.position.set(100, 100, 100);
-            scene.add(mesh);
-
-            var mesh1 = new THREE.Mesh(new THREE.CubeGeometry(100, 100, 100),
-                new THREE.MeshPhongMaterial({
-
-                })
-                /*new THREE.MeshLambertMaterial({
-                    map: THREE.ImageUtils.loadTexture("../assets/images/box.jpg", {}, function () {
-                        renderer.render(scene, camera);
-                    })
-                })*/
-            );
-            mesh1.position.set(400, 100, 200);
-            scene.add(mesh1);
-
-            var light = new THREE.DirectionalLight("white", 1, 10000);
-            light.position.set(600, 100, 500);
-
-            scene.add(camera);
-            scene.add(light);
-
-            renderer = new THREE.WebGLRenderer({
-                canvas: document.getElementById('stage')
-            });
-            renderer.setClearColor("white");
-
-
-
-            setInterval(function () {
-                mesh.rotation.x += 0.05;
-                mesh.rotation.y += 0.05;
-
-                mesh1.rotation.x += 0.01;
-                mesh1.rotation.y += 0.01;
-
-                renderer.render(scene, camera);
-            }, 40);
-        }
-
-        function load() {
-            init();
-            //animate();
-
-            $(document).on("mousedown","#stage",function(e){
-                if(e.button==0){
-                    canvasMouseDown=true;
-                    preMousePt=[e.clientX,e.clientY];
-                }
-            }).on("mouseup","#stage",function(e){
-                canvasMouseDown=false;
-
-            }).on("mousemove","#stage",function(e){
-                if(canvasMouseDown){
-                    var x=e.clientX-preMousePt[0];
-                    var y=e.clientY-preMousePt[1];
-
-                    if(x>10||x<-10||y>10||y<-10){
-                        camera.position.set(camera.position.x-x, camera.position.y+y,camera.position.z);
-                        
-                        preMousePt=[e.clientX,e.clientY];
-                        renderer.render(scene, camera);
+                //加载个模型
+                var data1 = {
+                    geometry: {
+                        type: "box",
+                        l: 100,
+                        w: 100,
+                        h: 100,
+                        r: 0
+                    },
+                    material: {
+                        type: "color",
+                        color: "red",
+                        opacity: 0.8,
+                        reflect: true,
+                        path: "",
+                        repeat: []
+                    },
+                    angle: {
+                        x: 0,
+                        y: 0,
+                        z: 0
+                    },
+                    position: {
+                        x: 0,
+                        y: 0,
+                        z: 0
                     }
-                }
-            }).on("mousewheel","#stage",function(e,f){
-                var z=e.originalEvent.deltaY;                
-                camera.fov+=z/50;
-                //camera.position.set(camera.position.x, camera.position.y,camera.position.z+=z/50);
+                };
 
- camera.updateProjectionMatrix();
-renderer.render(scene, camera);
+                var mesh = buildModel(data1);
+                dgis3d.scene.add(mesh);
+
+                dgis3d.camera.position.set(100, 0, 200);
+                dgis3d.camera.lookAt({//相机看向哪个坐标
+                    x : 0,
+                    y : 0,
+                    z : 0
+                });
+
+                dgis3d.render();
+
+                var d = 0;
+                var r = 200;
+                setInterval(function () {
+                    d++;
+
+                    var hudu = (2 * Math.PI / 360) * 6 * d;
+
+                    var x = Math.sin(hudu) * r;
+                    var z = Math.cos(hudu) * r
+
+
+                    dgis3d.camera.position.set(x, 0, z);
+
+
+
+                }, 20000);
+
+                function buildModel(data) {
+                    //创建结构
+                    var geometry;
+                    switch (data.geometry.type) {
+                        case "box":
+                            geometry = dgis3d.geometry.box(data.geometry.l, data.geometry.w, data.geometry.h);
+                            break;
+                        case "cylinder":
+                            geometry = dgis3d.geometry.cylinder(data.geometry.r, data.geometry.l);
+                            break;
+                        case "obj":
+                            dgis3d.geometry.model(data.geometry.l, data.geometry.w, data.geometry.h, data.material.path + ".mtl", data.material.path + ".obj", data.angle, data.position, function (obj) {
+                                dgis3d.scene.add(obj);
+                                dgis3d.render();
+                            });
+                            return;
+                            break;
+                    }
+
+                    //创建纹理
+                    var material;
+                    switch (data.material.type) {
+                        case "img":
+                            material = dgis3d.material.bitmapMaterial(data.material.path, data.material.repeat[0], data.material.repeat[1]);
+                            break;
+                        case "color":
+                            material = dgis3d.material.colorMaterial(data.material.color, data.material.opacity, data.material.reflect);
+                            break;
+                    }
+
+                    if (geometry != null) {
+                        //创建模型
+                        var mesh = new THREE.Mesh(geometry, material);
+
+                        //计算相对位置
+                        var pt = dgis3d.geometry.getPosition(data.position, data.geometry.l, data.geometry.w, data.geometry.h);
+                        mesh.position.set(pt.x, pt.y, pt.z);
+
+                        return mesh;
+
+                    }
+                };
             });
-        }
+        });
+
+
     </script>
 
 </head>
 
-<body onload="load()">
+<body>
     <canvas id="stage" width="1800px" height="900px"></canvas>
 </body>
 
