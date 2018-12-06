@@ -4,7 +4,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
         sceneDomId: "",
         initToolbar: null,
         event: "control",
-        viewType:0,//视图类型
+        viewType: 0,//视图类型
         datas: [],
         cacheObjs: []
     };
@@ -39,6 +39,13 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             }
 
         });
+
+        $(window).on("resize", function () {
+            dgis3d.camera.aspect = window.innerWidth / window.innerHeight;
+            dgis3d.camera.updateProjectionMatrix();
+
+            dgis3d.renderer.setSize(window.innerWidth, window.innerHeight);
+        });
     };
 
     main.initToolbar = function () {
@@ -64,7 +71,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             color: "darkslategray",
             click: "main.toolbar.control()"
         });
-        
+
         menus.push({
             svg: '<svg class="icon" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7349"><path d="M281.611519 767.961602h-204.78976C34.481476 767.961602 0.025599 733.505725 0.025599 691.165442v-614.369282C0.025599 34.455877 34.481476 0 76.821759 0h716.764162c42.340283 0 76.79616 34.455877 76.79616 76.79616v358.382081a25.59872 25.59872 0 0 1-51.19744 0v-358.382081a25.59872 25.59872 0 0 0-25.59872-25.59872h-716.764162a25.59872 25.59872 0 0 0-25.59872 25.59872v614.369282a25.59872 25.59872 0 0 0 25.59872 25.59872h204.78976a25.59872 25.59872 0 0 1 0 51.19744z" fill="" p-id="7350"></path><path d="M665.59232 1023.948803a25.59872 25.59872 0 0 1-23.755612-16.075997l-86.882056-217.179541-151.698015 173.354533A25.59872 25.59872 0 0 1 358.40768 947.20384v-767.961602a25.59872 25.59872 0 0 1 42.852257-18.943053l563.171841 511.974401a25.547523 25.547523 0 0 1-17.202339 44.541773H729.077146l88.366782 220.865757a25.59872 25.59872 0 0 1-14.284086 33.278336l-127.9936 51.19744a26.0083 26.0083 0 0 1-9.522724 1.843108z m-102.39488-307.184641a25.59872 25.59872 0 0 1 23.755612 16.075996l92.872157 232.231588 80.482376-32.203189-92.872157-232.231589a25.547523 25.547523 0 0 1 23.755612-35.121444h189.788911L409.60512 236.99295v641.964702l134.342083-153.541123a25.649918 25.649918 0 0 1 19.250237-8.754762z" fill="" p-id="7351"></path></svg>',
             text: "选择",
@@ -130,22 +137,25 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
         }
     };
 
+    /**
+     * 工具栏事件
+     */
     main.toolbar = {
         new: function () {
             main.event = "control";
             main.initScene();
         },
-        del:function(){
-            if(main.cacheObjs.length==0){
-                layer.msg("请选选择需要删除的模型",{icon:0});
-            }else{
-                var model=main.cacheObjs[0];
+        del: function () {
+            if (main.cacheObjs.length == 0) {
+                layer.msg("请选选择需要删除的模型", { icon: 0 });
+            } else {
+                var model = main.cacheObjs[0];
                 dgis3d.scene.remove(model.mesh);
                 main.cacheObjs.splice(0, 1);
                 dgis3d.render();
 
-                for(var i=0;i<main.datas.length;i++){
-                    if(main.datas[i].name==model.name){
+                for (var i = 0; i < main.datas.length; i++) {
+                    if (main.datas[i].name == model.name) {
                         main.datas.splice(i, 1);
                         break;
                     }
@@ -158,18 +168,21 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
         move: function () {
             main.event = "move";
         },
-        control:function(){
+        control: function () {
             main.event = "control";
         },
-        view:function(){
+        view: function () {
             main.viewType++;
-            if(main.viewType>2)
-                main.viewType=0;
+            if (main.viewType > 2)
+                main.viewType = 0;
             dgis3d.view(main.viewType);
             main.orbitControls.update();
         }
     };
 
+    /**
+     * 初始化模型控件
+     */
     main.initModels = function () {
         var models = [];
         models.push({
@@ -200,7 +213,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
         for (var i = 0; i < models.length; i++) {
             var model = models[i];
 
-            var li = "<li><a href=\"javascript:void(0)\" onclick=\"main.newModel('创建"+model.text+"','" + model.url + "')\">";
+            var li = "<li><a href=\"javascript:void(0)\" onclick=\"main.newModel('创建" + model.text + "','" + model.url + "')\">";
             li += model.svg;
             li += "<div>";
             li += model.text;
@@ -211,6 +224,9 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
 
     };
 
+    /**
+     * 初始化场景
+     */
     main.initScene = function () {
         $("#" + main.sceneDomId).attr({ "width": $(window).width() + "px", "height": $(window).height() + "px" });
 
@@ -348,7 +364,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
     }
 
     /**
-     * 打开新页面
+     * 新建模型
      * @param {*} title 
      * @param {*} url 
      */
@@ -358,21 +374,21 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             title: title,
             area: ["350px", "300px"],
             content: url,
-            btn: ['确定', '取消'], 
-            success:function(layero, index){
+            btn: ['确定', '取消'],
+            success: function (layero, index) {
                 var iframeWin = window[layero.find('iframe')[0]['name']];
                 iframeWin.main.init();
             },
             yes: function (index, layero) {
                 var iframeWin = window[layero.find('iframe')[0]['name']];
-                var data=iframeWin.main.vueObj.Data;
-                var mesh= main.buildModel(data);
+                var data = iframeWin.main.vueObj.Data;
+                var mesh = main.buildModel(data);
                 dgis3d.scene.add(mesh);
                 main.datas.push(data);
                 dgis3d.render();
 
                 layer.close(index);
-            }, 
+            },
             btn2: function (index, layero) {
                 layer.close(index);
             }
@@ -419,8 +435,12 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             dgis3d.render();
 
             if (main.cacheObjs.length > 0) {
-                var name = main.cacheObjs[0].mesh.name;
-                var data = common.getItemInItems(main.datas, "name", name);
+                //获取第1个模型
+                var model = main.cacheObjs[0];
+                //同步模型最新数据
+                var data = main.syncModelProperty(model.mesh);
+
+                //显示属性
                 main.showModelProperty(data);
             }
         });
@@ -438,7 +458,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                 geometry = dgis3d.geometry.box(data.geometry.l, data.geometry.w, data.geometry.h);
                 break;
             case "cylinder":
-                geometry = dgis3d.geometry.cylinder(data.geometry.r, data.geometry.l);
+                geometry = dgis3d.geometry.cylinder(data.geometry.r, data.geometry.h);
                 break;
             case "obj":
                 dgis3d.geometry.model(data.geometry.l, data.geometry.w, data.geometry.h, data.material.path + ".mtl", data.material.path + ".obj", data.angle, data.position, function (obj) {
@@ -484,7 +504,32 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
      */
     main.showModelProperty = function (data) {
         //显示基本属性
-        window.frames["geometryIframe"].contentWindow.main.init(data);
+        var url = "";
+        switch (data.geometry.type) {
+            case "box":
+                url = "modeling/box.html";
+                break;
+            case "cylinder":
+                url = "modeling/cylinder.html";
+                break;
+            case "obj":
+                url = "modeling/obj.html";
+                break;
+        }
+
+        //显示基本属性
+        var iframe = document.getElementById("geometryIframe");
+        iframe.src = url;
+        if (iframe.attachEvent) {
+            iframe.attachEvent("onload", function () {
+                window.frames["geometryIframe"].contentWindow.main.init(data);
+            });
+        } else {
+            iframe.onload = function () {
+                window.frames["geometryIframe"].contentWindow.main.init(data);
+            };
+        }
+
 
         //显示材质属性
         window.frames["materialIframe"].contentWindow.main.init(data);
@@ -518,6 +563,46 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             var oldData = common.getItemInItems(main.datas, "name", data.name);
             oldData = data;
         }
+    };
+
+    /**
+     * 同步模型属性
+     * @param {*} model 
+     */
+    main.syncModelProperty = function (model) {
+        //找到旧数据
+        var data = common.getItemInItems(main.datas, "name", model.name);
+
+        //分类获取模型尺寸
+        if (model.geometry instanceof THREE.BoxGeometry) {
+            //box模型
+            var box = new THREE.Box3();
+            box.expandByObject(model);
+
+            var length = box.max.x - box.min.x;
+            var width = box.max.z - box.min.z;
+            var height = box.max.y - box.min.y;
+
+            data.geometry.l = length;
+            data.geometry.w = width;
+            data.geometry.h = height;
+        } else if (model.geometry instanceof THREE.CylinderGeometry) {
+            var length = model.geometry.parameters.height;
+            var r = model.geometry.parameters.radialSegments;
+
+            data.geometry.l = r * 2;
+            data.geometry.w = r * 2;
+            data.geometry.h = length;
+
+            data.geometry.r = r;
+        }
+
+        //获取位置
+        var position = model.position;
+        position = dgis3d.geometry.restorePositon(position, data.geometry.l, data.geometry.w, data.geometry.h);
+        data.position = position;
+
+        return data;
     };
 
     return main;

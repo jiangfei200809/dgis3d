@@ -349,6 +349,18 @@ define(function () {
 
             return { x: x, y: y, z: z };
         },
+
+        /**
+         * 根据模型实际场景位置计算原始位置
+         */
+        restorePositon:function(position, l, w, h) {
+            var x=position.x-(l - main.sceneRange.l) / 2;
+            var z= position.y - (h - main.sceneRange.h) / 2;
+            var y = position.z - (w - main.sceneRange.w) / 2;
+
+            return { x: x, y: y, z: z };
+        },
+
         /**
          * 裁剪图形
      * @param {*} mesh 原始模型
