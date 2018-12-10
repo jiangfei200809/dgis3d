@@ -26,7 +26,24 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             //画布
             main.sceneDomId = domId;
             main.initScene();
-            main.test();
+
+            var uid = common.getUrlParam("id");
+            if (uid == null) {
+                main.test();
+            } else {
+                asyncRequest.post("/webapi/model/get", { uid: uid }, function (e) {
+                    if (e.Success) {
+                        var datas =JSON.parse(e.Content);
+                        for (var i = 0; i < main.datas.length; i++) {
+                            var mesh = main.buildModel(main.datas[i]);
+                            dgis3d.scene.add(mesh);
+                        }
+                        dgis3d.render();
+                    } else {
+                        layer.msg("模型获取失败", { icon: 2 });
+                    }
+                });
+            }
         }).on("click", function (e) {
             main.orbitControls.enabled = true;
             main.dragControls.enabled = false;
@@ -184,8 +201,18 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             dgis3d.view(main.viewType);
             main.orbitControls.update();
         },
-        save:function(){
-            console.log(JSON.stringify(main.datas));
+        save: function () {
+            asyncRequest.post("/webapi/model/save", { json: JSON.stringify(main.datas) }, function (e) {
+                if (e.Success) {
+                    var uid = e.Content;
+                    layer.msg("保存模型成功，即将跳转至您的模型页面，请注意收藏改页面", { icon: 1 });
+                    setTimeout(function () {
+                        window.location.href = "/?id=" + uid;
+                    }, 2000);
+                } else {
+                    layer.msg("保存模型失败", { icon: 2 });
+                }
+            });
         }
     };
 

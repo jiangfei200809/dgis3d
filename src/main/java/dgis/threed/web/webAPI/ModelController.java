@@ -55,7 +55,21 @@ public class ModelController {
     @RequestMapping("/model/save")
     public ResultObj Save(String json){
         ResultObj resultObj=new ResultObj(false,"",null,0,"");
+        resultObj.setSuccess(true);
+        resultObj.setContent(UUID.randomUUID());
         return resultObj;
     }
 
+    /**
+     * 获取场景
+     * @param uid
+     * @return
+     */
+    @RequestMapping("/model/get")
+    public ResultObj GetModels(String uid){
+        ResultObj resultObj=new ResultObj(false,"",null,0,"");
+        resultObj.setSuccess(true);
+        resultObj.setContent("");
+        return resultObj;
+    }
 }
