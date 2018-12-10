@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8>
+    <title>OBJ属性</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            height: 50px;
+            line-height: 50px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .fieldName {
+            width: 90px;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            float: left;
+            padding-left: 10px;
+            font-size: 18px;
+            color: white;
+        }
+
+        .fieldValue {
+            width: calc(100% - 110px);
+            float: left;
+        }
+
+        .fieldValue input[type="text"] {
+            border: solid 1px #eee;
+            height: 30px;
+            width: 100%;
+            max-width: 150px;
+            opacity: 0.8;
+            float: left;
+        }
+
+        .fieldValue input[type="button"] {
+            width: 50px;
+            float: left;
+            height: 33px;
+            border: none;
+            background: #38f;
+            color: white;
+            cursor: pointer;
+        }
+
+        .fieldTitle {
+            background: rgba(238, 238, 238, 0.473);
+            padding-left: 5px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+
+    <script src="../../assets/js/jquery-1.10.2.min.js"></script>
+    <script src="../../assets/js/jquery.form.min.js"></script>
+    <script src="../../assets/plugins/dgisUploader/digsUploader.js"></script>
+    <script src="../../assets/js/vue.js"></script>
+    <script src="../../assets/js/esl.js"></script>
+
+    <script>
+        var main;
+        require(["/assets/modules/modeling/obj"], function (obj) {
+            main = obj;
+        });
+    </script>
+
+</head>
+
+<body>
+<ul>
+    <li>
+        <div class="fieldTitle">
+            基础属性
+        </div>
+    </li>
+    <li>
+        <div class="fieldName">模型：</div>
+        <div class="fieldValue">
+            <input type="text" id="path" name="path" v-model="Data.material.path" v-on:change="changeValue"
+                   style="width:calc(100% - 58px)"/>
+            <input type="button" id="uploadBtn" value="上传"/>
+        </div>
+    </li>
+    <li>
+        <div class="fieldName">长：</div>
+        <div class="fieldValue">
+            <input type="text" name="l" v-model.number="Data.geometry.l" v-on:change="changeValue"/>
+        </div>
+    </li>
+    <li>
+        <div class="fieldName">宽：</div>
+        <div class="fieldValue">
+            <input type="text" name="w" v-model.number="Data.geometry.w" v-on:change="changeValue"/>
+        </div>
+    </li>
+    <li>
+        <div class="fieldName">高：</div>
+        <div class="fieldValue">
+            <input type="text" name="h" v-model.number="Data.geometry.h" v-on:change="changeValue"/>
+        </div>
+    </li>
+    <li>
+        <div class="fieldTitle">
+            位置属性
+        </div>
+    </li>
+    <li>
+        <div class="fieldName">x：</div>
+        <div class="fieldValue">
+            <input type="text" name="x" v-model.number="Data.position.x" v-on:change="changeValue"/>
+        </div>
+    </li>
+    <li>
+        <div class="fieldName">y：</div>
+        <div class="fieldValue">
+            <input type="text" name="y" v-model.number="Data.position.y" v-on:change="changeValue"/>
+        </div>
+    </li>
+    <li>
+        <div class="fieldName">z：</div>
+        <div class="fieldValue">
+            <input type="text" name="z" v-model.number="Data.position.z" v-on:change="changeValue"/>
+        </div>
+    </li>
+    <li>
+        <div class="fieldTitle">
+            角度属性
+        </div>
+    </li>
+    <li>
+        <div class="fieldName">x轴角度：</div>
+        <div class="fieldValue">
+            <input type="text" name="angleX" v-model.number="Data.angle.x" v-on:change="changeValue"/>
+        </div>
+    </li>
+    <li>
+        <div class="fieldName">y轴角度：</div>
+        <div class="fieldValue">
+            <input type="text" name="angleY" v-model.number="Data.angle.y" v-on:change="changeValue"/>
+        </div>
+    </li>
+    <li>
+        <div class="fieldName">z轴角度：</div>
+        <div class="fieldValue">
+            <input type="text" name="angleZ" v-model.number="Data.angle.z" v-on:change="changeValue"/>
+        </div>
+    </li>
+</ul>
+</body>
+
+</html>

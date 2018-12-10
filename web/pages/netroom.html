@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8>
+    <title>3D测试</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%
+        }
+
+        #stage {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%
+        }
+    </style>
+
+    <script src="../assets/js/jquery-1.10.2.min.js"></script>
+    <script src="../assets/plugins/threejs/three.js"></script>
+    <script src="../assets/plugins/threejs/threebsp.js"></script>
+    <script src="../assets/plugins/threejs/orbitControls.js"></script>
+    <script src="../assets/plugins/threejs/OBJLoader.js"></script>
+    <script src="../assets/plugins/threejs/MTLLoader.js"></script>
+    <script src="../assets/plugins/threejs/DragControls.js"></script>
+    <script src="../assets/plugins/threejs/TweenMax.min.js"></script>
+
+    <script src="../assets/js/esl.js"></script>
+
+    <script>
+        require(["/assets/modules/netroom"], function (room) {
+            room.init("stage");
+        });
+    </script>
+
+</head>
+
+<body>
+<canvas id="stage"></canvas>
+</body>
+
+</html>
