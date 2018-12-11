@@ -53,7 +53,8 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                         main.datas = JSON.parse(e.Content.json);
                         for (var i = 0; i < main.datas.length; i++) {
                             var mesh = main.buildModel(main.datas[i]);
-                            dgis3d.scene.add(mesh);
+                            if(mesh!=null)
+                                dgis3d.scene.add(mesh);
                         }
                         dgis3d.render();
                     } else {
@@ -471,11 +472,6 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                     obj.name = data.name;
                     dgis3d.scene.add(obj);
                     dgis3d.render();
-
-                    main.cacheObjs.push({
-                        mesh: obj,
-                        material: obj.material
-                    });
                 });
                 return;
                 break;

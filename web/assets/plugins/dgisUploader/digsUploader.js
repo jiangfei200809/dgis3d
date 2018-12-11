@@ -6,15 +6,25 @@
  * @param {*} callBack 回调func
  */
 var DgisUploader = function (buttonDomId, actionUrl, multipart, callBack) {
+    //移除绑定事件
+    $("#" + buttonDomId).unbind();
+    $("#" + id + "Upload").unbind();
+
+    //移除所有上传组件
+    $(".uploadForm").remove();
+
+    //添加上传组件
     var id = new Date().getTime();
-    var form = "<form id=\"" + id + "Form\" method=\"post\" action=\"" + actionUrl + "\" enctype=\"multipart/form-data\" style=\"display: none;\"><input type=\"file\" name=\"file\"";
+    var form = "<form id=\"" + id + "Form\" class=\"uploadForm\" method=\"post\" action=\"" + actionUrl + "\" enctype=\"multipart/form-data\" style=\"display: none;\"><input type=\"file\" name=\"file\"";
     if (multipart)
         form += " multiple=\"multiple\" ";
     form += "id=\"" + id + "Upload\"/></form>";
 
     $("body").append(form);
 
-    $(document).on("click", "#" + buttonDomId, function () {
+    $(document).ready(function(){
+        
+    }).on("click", "#" + buttonDomId, function () {
         $("#" + id + "Upload").click();
     }).on("change", "#" + id + "Upload", function () {
         //上传文件

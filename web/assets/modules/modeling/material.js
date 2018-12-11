@@ -6,7 +6,6 @@ define(function () {
 
     main.init = function (data) {
         var dgisUploader = new DgisUploader("uploadBtn", "/webapi/file/upload", false, function (result) {
-            //var dgisUploader = new DgisUploader("uploadBtn", "/webapi/model/objUpload", false, function (result) {   
             if (result.Success) {
                 main.vueObj.Data.material.path = result.Content[0].url;
                 window.parent.main.changeModelProperty(main.vueObj.Data);

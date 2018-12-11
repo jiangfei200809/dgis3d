@@ -31,6 +31,7 @@ html,
         .fieldValue {
             width: calc(100% - 110px);
             float: left;
+            color: white;
         }
 
         .fieldValue input[type="text"] {
