@@ -31,9 +31,9 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             if (uid == null) {
                 main.test();
             } else {
-                asyncRequest.post("/webapi/model/get", { uid: uid }, function (e) {
+                syncRequest.get("/webapi/model/get?uid="+uid,null, function (e) {
                     if (e.Success) {
-                        var datas =JSON.parse(e.Content);
+                        main.datas =JSON.parse(e.Content.json);
                         for (var i = 0; i < main.datas.length; i++) {
                             var mesh = main.buildModel(main.datas[i]);
                             dgis3d.scene.add(mesh);
@@ -163,7 +163,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
     main.toolbar = {
         new: function () {
             main.event = "control";
-            main.initScene();
+            window.location.href="/";
         },
         del: function () {
             if (main.cacheObjs.length == 0) {
@@ -202,7 +202,12 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             main.orbitControls.update();
         },
         save: function () {
-            asyncRequest.post("/webapi/model/save", { json: JSON.stringify(main.datas) }, function (e) {
+            var data={
+                json: JSON.stringify(main.datas),
+                uid:common.getUrlParam("id"),
+                email:"xdfsfds"
+            };
+            syncRequest.post("/webapi/model/save", data, function (e) {
                 if (e.Success) {
                     var uid = e.Content;
                     layer.msg("保存模型成功，即将跳转至您的模型页面，请注意收藏改页面", { icon: 1 });

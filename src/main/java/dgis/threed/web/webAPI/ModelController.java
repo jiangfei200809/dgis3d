@@ -1,6 +1,8 @@
 package dgis.threed.web.webAPI;
 
 import dgis.threed.common.Config;
+import dgis.threed.model.Scene;
+import dgis.threed.service.SceneService;
 import dgis.threed.web.model.ResultObj;
 import dgis.threed.web.model.UploadFile;
 import dgis.threed.web.util.ZipHelper;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,14 +52,23 @@ public class ModelController {
 
     /**
      * 保存场景
-     * @param json
+     * @param item
      * @return
      */
     @RequestMapping("/model/save")
-    public ResultObj Save(String json){
+    public ResultObj Save(Scene item){
         ResultObj resultObj=new ResultObj(false,"",null,0,"");
-        resultObj.setSuccess(true);
-        resultObj.setContent(UUID.randomUUID());
+
+        boolean result=false;
+        item.setCreateTime(new Date());
+        if(item.getUid().isEmpty()){
+            item.setUid(UUID.randomUUID().toString());
+            result=SceneService.GetInstance().Add(item );
+        }else{
+            result=SceneService.GetInstance().Update(item );
+        }
+        resultObj.setSuccess(result);
+        resultObj.setContent(item.getUid());
         return resultObj;
     }
 
@@ -68,8 +80,9 @@ public class ModelController {
     @RequestMapping("/model/get")
     public ResultObj GetModels(String uid){
         ResultObj resultObj=new ResultObj(false,"",null,0,"");
+        Scene item=SceneService.GetInstance().GetById(uid);
         resultObj.setSuccess(true);
-        resultObj.setContent("");
+        resultObj.setContent(item);
         return resultObj;
     }
 }
