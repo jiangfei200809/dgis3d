@@ -21,7 +21,7 @@ define(function () {
                     opacity: 1,
                     reflect: true,
                     path: "",
-                    repeat: [36, 26]
+                    repeat: [1, 1]
                 },
                 angle: {
                     x: 0,

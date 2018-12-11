@@ -1,0 +1,20 @@
+.tech_box {
+    border: solid 1px #037cab;
+    margin: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.tech_box .corner {
+    background: #037cab;
+    position: absolute;
+}
+
+.tech_box .content {
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    top: 2px;
+    bottom: 2px;
+    overflow: auto;
+}

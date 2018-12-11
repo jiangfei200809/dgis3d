@@ -7,7 +7,7 @@
     <style>
     </style>
 
-    <link href="../assets/css/modeling.css" rel="stylesheet" type="text/css"/>
+    <link href="../assets/css/modeling.css" rel="stylesheet" type="text/css" />
 
     <script src="../assets/js/jquery-1.10.2.min.js"></script>
     <script src="../assets/js/common.js"></script>
@@ -20,10 +20,13 @@
     <script src="../assets/plugins/threejs/TweenMax.min.js"></script>
 
     <script src="../assets/plugins/dgisSlider/dgisSlider.js"></script>
-    <link href="../assets/plugins/dgisSlider/dgisSlider.css" rel="stylesheet" type="text/css"/>
+    <link href="../assets/plugins/dgisSlider/dgisSlider.css" rel="stylesheet" type="text/css" />
+
+    <script src="../assets/plugins/dgisTechBox/dgisTechBox.js"></script>
+    <link href="../assets/plugins/dgisTechBox/dgisTechBox.css" rel="stylesheet" type="text/css" />
 
     <script src="../assets/plugins/layui/layui.all.js"></script>
-    <link href="../assets/plugins/layui/css/layui.css" rel="stylesheet" type="text/css"/>
+    <link href="../assets/plugins/layui/css/layui.css" rel="stylesheet" type="text/css" />
 
     <script src="../assets/js/esl.js"></script>
 
@@ -37,39 +40,66 @@
 
     <style>
         .layui-layer {
-            background-color: rgba(0, 0, 0, 0.5);
             opacity: 0.8;
+            border: solid 1px #037cab;
+            margin: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            position: relative;
         }
 
         .layui-layer-title {
-            color: #FF9800;
-            background-color: #009688;
+            color: white;
+            background: rgba(3, 169, 244, 0.5);
         }
     </style>
 
 </head>
 
 <body>
-<canvas id="stage"></canvas>
+    <canvas id="stage" class="map"></canvas>
 
-<div class="tools_bar">
-    <div class="partialButton">
+    <div class="tools_bar">
+        <div class="partialButton">
 
+        </div>
     </div>
-</div>
 
-<ul id="modelsDiv">
+    <div class="header">
+        <div class="logo_div">
+            DGIS三维建模-beta 1.0
+        </div>
+        <div class="botton_div">
+            <div class="bottons">
+                <a style="float: right">
+                    <svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024"
+                        version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1439">
+                        <path d="M511.99775156 6.12502222C232.59670762 6.12502222 6.10591049 232.61244669 6.10591049 512c0 279.38980176 226.49304557 505.87385357 505.89184107 505.87385357 279.39991973 0 505.89521373-226.48405181 505.89521372-505.87385357 0-279.38867754-226.49641823-505.87497778-505.89521372-505.87497778z m0 965.76152562C257.9950651 971.88654784 52.09321621 765.97233255 52.09321621 512c0-254.0161771 205.90184889-459.88542363 459.90453535-459.88542363S971.90116269 257.98607134 971.90116269 512c0 253.96895989-205.90184889 459.88654784-459.90341113 459.88654784z m252.94816897-459.8842994H534.9902802V213.0757675c0-12.70817249-10.3045921-22.99365286-22.99365286-22.99365287-12.68793654 0-22.99477708 10.28323194-22.99477708 22.99365287v321.91788536c0 12.68793654 10.30908897 22.99365286 22.99477708 22.99365286h252.94816898c12.68681233 0 22.99477708-10.30684053 22.99477708-22.99365286-0.00224844-12.70592405-10.30908897-22.99252865-22.99477708-22.99252865z"
+                            p-id="1440"></path>
+                    </svg>
+                    <label id="date"></label>
+                    <label id="time"></label>
+                </a>
+            </div>
+        </div>
+    </div>
 
-</ul>
+    <div class="left_div">
+        <ul id="modelsDiv" class="dgisBox" style="">
 
-<ul id="propertyUl">
-    <li>
-        <iframe id="geometryIframe" src="/pages/modeling/box.html"></iframe>
-    </li>
-    <li>
-        <iframe id="materialIframe" src="/pages/modeling/material.html"></iframe>
-    </li>
-</ul>
+        </ul>
+    </div>
+
+    <div class="right_div">
+        <ul id="propertyUl" class="dgisBox" style="width: 100%;height: 90%;">
+            <li>
+                <iframe id="geometryIframe" src="/pages/modeling/box.html"></iframe>
+            </li>
+            <li>
+                <iframe id="materialIframe" src="/pages/modeling/material.html"></iframe>
+            </li>
+        </ul>
+    </div>
+
 </body>
 
 </html>

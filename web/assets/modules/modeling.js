@@ -11,17 +11,34 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
 
     main.init = function (domId) {
         $(document).ready(function () {
+            //外框渲染
+            var techBox=new DGISTechBox();
+            techBox.renderByDomClass("dgisBox");
+            $(".right_div").css("display", "none");
+
+            //时间提示
+            setInterval(function () {
+                date = new Date();
+                var minute = date.getMinutes();
+                var seconds = date.getSeconds();
+
+                $("#time").text(date.getHours() + ":" + (minute < 10 ? "0" : "") + minute + ":" + (seconds < 10 ? "0" : "") + seconds);
+                $("#date").text(date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate());
+            }, 1000);
+
             //工具栏
             main.initToolbar();
             //模型栏
             main.initModels();
 
             //右侧属性工具栏
-            var slider0 = new DgisSlider("modelsDiv");
-            slider0.init("150px", "500px", "200px", true, true);
-
-            var slider1 = new DgisSlider("propertyUl");
-            slider1.init("280px", "100%", "0", false, true);
+            /*
+             var slider0 = new DgisSlider("modelsDiv");
+             slider0.init("150px", "500px", "200px", true, true);
+ 
+             var slider1 = new DgisSlider("propertyUl");
+             slider1.init("280px", "100%", "0", false, true);
+             */
 
             //画布
             main.sceneDomId = domId;
@@ -31,9 +48,9 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             if (uid == null) {
                 main.test();
             } else {
-                syncRequest.get("/webapi/model/get?uid="+uid,null, function (e) {
+                syncRequest.get("/webapi/model/get?uid=" + uid, null, function (e) {
                     if (e.Success) {
-                        main.datas =JSON.parse(e.Content.json);
+                        main.datas = JSON.parse(e.Content.json);
                         for (var i = 0; i < main.datas.length; i++) {
                             var mesh = main.buildModel(main.datas[i]);
                             dgis3d.scene.add(mesh);
@@ -44,6 +61,8 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                     }
                 });
             }
+
+
         }).on("click", function (e) {
             main.orbitControls.enabled = true;
             main.dragControls.enabled = false;
@@ -163,7 +182,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
     main.toolbar = {
         new: function () {
             main.event = "control";
-            window.location.href="/";
+            window.location.href = "/";
         },
         del: function () {
             if (main.cacheObjs.length == 0) {
@@ -202,10 +221,10 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             main.orbitControls.update();
         },
         save: function () {
-            var data={
+            var data = {
                 json: JSON.stringify(main.datas),
-                uid:common.getUrlParam("id"),
-                email:"xdfsfds"
+                uid: common.getUrlParam("id"),
+                email: "xdfsfds"
             };
             syncRequest.post("/webapi/model/save", data, function (e) {
                 if (e.Success) {
@@ -363,6 +382,8 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             success: function (layero, index) {
                 var iframeWin = window[layero.find('iframe')[0]['name']];
                 iframeWin.main.init();
+
+                $(".layui-layer").addClass("tech_box").append('<div class="lth corner" style="width: 20px;height: 4px;left: -2px;top:-2px;"></div>        <div class="ltv corner" style="width: 4px;height: 20px;left: -2px;top:-2px;"></div>        <div class="rth corner" style="width: 20px;height: 4px;right: -2px;top:-2px;"></div>        <div class="rtv corner" style="width: 4px;height: 20px;right: -2px;top:-2px;"></div>        <div class="lbh corner" style="width: 20px;height: 4px;left: -2px;bottom:-2px;"></div>        <div class="lbv corner" style="width: 4px;height: 20px;left: -2px;bottom:-2px;"></div>        <div class="rbh corner" style="width: 20px;height: 4px;right: -2px;bottom:-2px;"></div>        <div class="rbv corner" style="width: 4px;height: 20px;right: -2px;bottom:-2px;"></div> ');
             },
             yes: function (index, layero) {
                 var iframeWin = window[layero.find('iframe')[0]['name']];
@@ -426,9 +447,8 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
 
             dgis3d.render();
 
-            if (selectData != null)
-                //显示属性
-                main.showModelProperty(selectData);
+            //显示属性
+            main.showModelProperty(selectData);
         });
     };
 
@@ -494,6 +514,10 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
      * @param {*} data
      */
     main.showModelProperty = function (data) {
+        $(".right_div").css("display", (data == null) ? "none" : "block");
+        if (data == null)
+            return;
+
         //显示基本属性
         var url = "";
         switch (data.geometry.type) {

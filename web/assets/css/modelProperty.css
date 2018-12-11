@@ -1,0 +1,63 @@
+html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            height: 50px;
+            line-height: 50px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .fieldName {
+            width: 90px;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            float: left;
+            padding-left: 10px;
+            font-size: 18px;
+            color: white;
+        }
+
+        .fieldValue {
+            width: calc(100% - 110px);
+            float: left;
+        }
+
+        .fieldValue input[type="text"] {
+            border: solid 1px #eee;
+            height: 30px;
+            width: 100%;
+            max-width: 150px;
+            opacity: 0.8;
+            margin-top: 5px;
+            float: left;
+        }
+
+        .fieldValue input[type="button"] {
+            width: 50px;
+            float: left;
+            height: 33px;
+            border: none;
+            background: #38f;
+            color: white;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+
+        .fieldTitle {
+            border-bottom: solid 1px #03A9F4;
+            color: #03A9F4;
+            padding-left: 5px;
+            font-size: 18px;
+            font-weight: bold;
+        }
