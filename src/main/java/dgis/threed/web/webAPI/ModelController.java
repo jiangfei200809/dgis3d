@@ -29,19 +29,18 @@ public class ModelController {
 
         if(item.isSuccess()){
             List<UploadFile> files=(List<UploadFile>)item.getContent();
-            String zipPath = Config.FileUploadPath+"\\" + files.get(0).getMd5();
+            UploadFile uploadFile=files.get(0);
+            String zipPath = Config.WebPath+"Upload\\" + uploadFile.getMd5()+uploadFile.getName().substring(uploadFile.getName().lastIndexOf("."));
 
             //解压文件
-            String uid=UUID.randomUUID().toString();
-            String saveFolder=Config.FileUploadPath+"\\"+uid;
+            String saveFolder=Config.WebPath+"Upload\\"+uploadFile.getMd5();
             boolean result= ZipHelper.GetInstance().DeCompressZip(zipPath,saveFolder);
             if(result){
                 File file = new File(zipPath);
                 file.delete();
 
                 item.setSuccess(true);
-                String content=uid+"/"+uid;
-                item.setContent(content);
+                item.setContent(files);
             }else{
                 item.setSuccess(false);
             }
@@ -69,6 +68,20 @@ public class ModelController {
         }
         resultObj.setSuccess(result);
         resultObj.setContent(item.getUid());
+
+        return resultObj;
+    }
+
+    /**
+     * 场景发送邮件
+     * @param id
+     * @param email
+     * @return
+     */
+    @RequestMapping("/model/email")
+    public ResultObj Email(String id,String email){
+        boolean result= SceneService.GetInstance().MailScene(id,email);
+        ResultObj resultObj=new ResultObj(result,"",null,0,"");
         return resultObj;
     }
 

@@ -7,7 +7,8 @@ define(function () {
     main.init = function (data) {
         var dgisUploader = new DgisUploader("uploadObjBtn", "/webapi/model/objUpload", false, function (result) {
             if (result.Success) {
-                main.vueObj.Data.material.path = "/Upload/" + result.Content;
+                var item=result.Content[0];
+                main.vueObj.Data.material.path = "/Upload/"+item.md5+"/"+item.md5;
                 window.parent.main.changeModelProperty(main.vueObj.Data);
             } else {
                 layer.msg("上传模型失败", { icon: 2 });

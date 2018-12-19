@@ -50,8 +50,9 @@ public class UploadController {
                     inputStream = mpf.getInputStream();
                     String md5 = MongoService.GetInstance(Config.MongoIp,Config.MongoPort,Config.MongoDataBase,Config.MongoUserName,Config.MongoPsw).GetMd5(inputStream);
                     String fileName = mpf.getOriginalFilename();
+                    String extension=fileName.substring(fileName.lastIndexOf("."));
 
-                    String savePath = Config.FileUploadPath+"/" + md5;
+                    String savePath = Config.WebPath+"Upload\\" + md5+extension;
                     inputStream = mpf.getInputStream();
                     if (saveFile(savePath, inputStream))
                     {
@@ -142,7 +143,7 @@ public class UploadController {
         ServletOutputStream os = null;
         try {
             os = response.getOutputStream();
-            String filePath = Config.FileUploadPath + "/" + key;
+            String filePath = Config.WebPath+"Upload\\"+ key;
             FileInputStream in= new FileInputStream(new File(filePath));
             int i =0;
             while ((i=in.read(buff)) != -1) {

@@ -342,12 +342,12 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                 r: 0
             },
             material: {
-                type: "img",
-                color: "",
+                type: "color",
+                color: "white",
                 opacity: 1,
                 reflect: true,
-                path: "../assets/images/netroom/floor.jpg",
-                repeat: [36, 26]
+                path: "",
+                repeat: [1, 1]
             },
             angle: {
                 x: 0,

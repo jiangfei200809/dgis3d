@@ -36,7 +36,7 @@ var DgisUploader = function (buttonDomId, actionUrl, multipart, callBack) {
                 if(data.Success){
                     for(var i=0;i<data.Content.length;i++){
                         var item=data.Content[i];
-                        item.url="/webapi/file/downloadImg?key="+item.md5;
+                        item.url="/Upload/"+item.md5+item.name.substring(item.name.indexOf("."));
                     }
                 }
                 callBack(data);

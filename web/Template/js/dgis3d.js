@@ -492,6 +492,56 @@ define(function () {
         requestAnimationFrame(main.render);
     };
 
+    /**
+     * 根据json创建模型
+     * @param {*} data 
+     * @param {*} func 
+     */
+    main.buildModel=function(data,func){
+        //创建结构
+        var geometry;
+        switch (data.geometry.type) {
+            case "box":
+                geometry = main.geometry.box(data.geometry.l, data.geometry.w, data.geometry.h);
+                break;
+            case "cylinder":
+                geometry = main.geometry.cylinder(data.geometry.r, data.geometry.h);
+                break;
+            case "obj":
+                main.geometry.model(data.geometry.l, data.geometry.w, data.geometry.h, data.material.path + ".mtl", data.material.path + ".obj", data.angle, data.position, function (obj) {
+                    obj.name = data.name;
+                    func(obj);
+                });
+                return;
+                break;
+        }
+
+        //创建纹理
+        var material;
+        switch (data.material.type) {
+            case "img":
+                material = main.material.bitmapMaterial(data.material.path, data.material.opacity, data.material.repeat[0], data.material.repeat[1]);
+                break;
+            case "color":
+                material = main.material.colorMaterial(data.material.color, data.material.opacity, data.material.reflect);
+                break;
+        }
+
+        if (geometry != null) {
+            //创建模型
+            var mesh = new THREE.Mesh(geometry, material);
+
+            //旋转模型
+            mesh.rotation.set(data.angle.x, data.angle.y, data.angle.z);
+
+            //计算相对位置
+            var pt = main.geometry.getPosition(data.position, data.geometry.l, data.geometry.w, data.geometry.h);
+            mesh.position.set(pt.x, pt.y, pt.z);
+            mesh.name = data.name;
+
+            func(mesh);
+        }
+    };
 
     return main;
 });

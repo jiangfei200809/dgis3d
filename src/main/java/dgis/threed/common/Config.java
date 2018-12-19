@@ -17,7 +17,7 @@ public class Config {
     public static String MongoPsw="root";
 
     /*系统配置*/
-    public  static  String FileUploadPath="H:\\Work\\Develop\\Web\\ThreeJS\\web\\Upload\\";
+    public  static  String WebPath="H:\\Work\\Develop\\Web\\ThreeJS\\web\\";
     //加密秘钥
     public  static  String DesKey="dgis3d";
     //登录过期时间 20分钟
