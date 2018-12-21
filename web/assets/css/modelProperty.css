@@ -38,7 +38,17 @@ html,
             border: solid 1px #eee;
             height: 30px;
             width: 100%;
-            max-width: 150px;
+            max-width: 400px;
+            opacity: 0.8;
+            margin-top: 5px;
+            float: left;
+        }
+
+        .fieldValue textarea {
+            border: solid 1px #eee;
+            height: 100px;
+            width: 100%;
+            max-width: 400px;
             opacity: 0.8;
             margin-top: 5px;
             float: left;

@@ -198,6 +198,8 @@ define(function () {
          * 创建面
          */
         polygon: function (points) {
+            var area=main.geometry.computeArea(points);
+
             var shape = new THREE.Shape();
             var point = points[0];
             shape.moveTo(point.x, point.y);
@@ -205,6 +207,8 @@ define(function () {
                 point = points[i];
                 shape.lineTo(point.x, point.y);
             }
+            point = points[0];
+            shape.lineTo(point.x, point.y);
 
             return shape;
         },
@@ -317,6 +321,32 @@ define(function () {
                     callBack(wrapper);
                 });
             })
+        },
+
+        /**
+         * 计算范围
+         */
+        computeArea:function(points){
+            var x=[];
+            var y=[];
+
+            for (var i = 1; i < points.length; i++) {
+                point = points[i];
+                x.push(point.x);
+                y.push(point.y);
+            }
+
+            var minX=Math.min.apply(Math,x);
+            var maxX=Math.max.apply(Math,x);
+            var minY=Math.min.apply(Math,y);
+            var maxY=Math.max.apply(Math,y);
+
+            return {
+                minX:minX,
+                maxX:maxX,
+                minY:minY,
+                maxY:maxY
+            }
         },
 
         mesh: function (geometry, position, material) {
@@ -457,6 +487,8 @@ define(function () {
                 var intersect = intersects[i];
                 if (intersect.object instanceof THREE.Mesh) {
                     var obj = intersect.object.parent;
+                    if(obj.name=="")
+                        obj=obj.parent;
                     obj.userData.distance = intersect.distance;
                     objs.push(obj);
                 }

@@ -4,6 +4,8 @@ import Service.MongoService;
 import dgis.threed.common.Config;
 import dgis.threed.web.model.ResultObj;
 import dgis.threed.web.model.UploadFile;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,8 +36,8 @@ public class UploadController {
         factory.setRepository(new File(request.getRealPath("/upload/tem")));
         // 初始化上传控件
         ServletFileUpload upload = new ServletFileUpload(factory);
-        // 文件大小最大3MB
-        upload.setFileSizeMax(31457280);
+        // 文件大小最大300MB
+        upload.setFileSizeMax(300*1204*1024);
         upload.setHeaderEncoding("UTF-8");*/
 
         Iterator<String> it = request.getFileNames();

@@ -12,7 +12,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
     main.init = function (domId) {
         $(document).ready(function () {
             //外框渲染
-            var techBox=new DGISTechBox();
+            var techBox = new DGISTechBox();
             techBox.renderByDomClass("dgisBox");
             $(".right_div").css("display", "none");
 
@@ -53,7 +53,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                         main.datas = JSON.parse(e.Content.json);
                         for (var i = 0; i < main.datas.length; i++) {
                             var mesh = main.buildModel(main.datas[i]);
-                            if(mesh!=null)
+                            if (mesh != null)
                                 dgis3d.scene.add(mesh);
                         }
                         dgis3d.render();
@@ -259,6 +259,12 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             url: "/pages/modeling/cylinder.html"
         });
         models.push({
+            type: "path",
+            svg: '<svg class="icon" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1491"><path d="M269.5 783.2c0 12-2.3 23-6.8 33.1-4.5 10.1-11.3 18.9-20.2 26.3-9 7.4-20.1 13.1-33.5 17.2-13.4 4.1-28.9 6.2-46.5 6.2h-25v73.8H87.8V710.1h76.7c17 0 32 1.6 45 4.8 13 3.2 24 7.9 32.9 14.2 8.9 6.2 15.6 13.9 20.2 22.9 4.6 9.1 6.9 19.5 6.9 31.2z m-51.7 3c0-6.1-1.1-11.6-3.3-16.6-2.2-5-5.5-9.2-10-12.7s-10.1-6.2-16.9-8.1c-6.8-1.9-14.9-2.8-24.2-2.8h-25.9v84.2H165c8.5 0 16.1-1 22.6-3.1 6.5-2 12.1-5 16.5-8.9 4.5-3.9 7.9-8.5 10.2-13.9 2.4-5.4 3.5-11.4 3.5-18.1zM456.7 939.8l-14.4-45.4h-91.4l-14.8 45.4h-48.9l77.6-229.7h68.9l77.6 229.7h-54.6z m-59.5-187.5l-34.5 106.9h68.5l-34-106.9zM650.1 746.1v193.7h-50.5V746.1h-71.7v-36h194v36h-71.8zM894.9 939.8v-100h-89v100h-49.3V710.1H806v92.3h89v-92.3h49.3v229.7h-49.4zM128 635c-32.5 0-58.9-26.4-58.9-58.9s26.4-58.9 58.9-58.9 59 26.4 59 58.8-26.5 59-59 59z m0-97.9c-21.5 0-38.9 17.5-38.9 38.9s17.5 39 38.9 39 39-17.5 39-39-17.5-38.9-39-38.9zM896.2 122.7c-32.4 0-58.7-26.4-58.7-58.7s26.4-58.7 58.7-58.7 58.7 26.4 58.7 58.7-26.3 58.7-58.7 58.7z m0-97.5c-21.4 0-38.7 17.4-38.7 38.7s17.4 38.7 38.7 38.7 38.7-17.4 38.7-38.7-17.4-38.7-38.7-38.7zM218.3 475.5l-28.4-9.6c33.2-98.1 87.3-152.3 165.3-165.6 66.7-11.4 139.5 8.6 209.8 27.9 79.3 21.8 154.2 42.3 199.1 8.9 33.6-24.9 50.9-79.3 53.1-166.4l30 0.8c-1.3 49.9-7.3 89.5-18.4 121.1-10.8 30.8-26.1 53.2-46.9 68.6-56.7 42.1-138.4 19.7-225-4.1-67.2-18.4-136.7-37.5-196.8-27.2-67 11.4-112.1 57.7-141.8 145.6zM235.6 471L192 512l-13.7-58.2zM861.9 179.9L832.2 128l-30.1 51.7z" p-id="1492"></path></svg>',
+            text: "GeoJson",
+            url: "/pages/modeling/path.html"
+        });
+        models.push({
             type: "obj",
             svg: '<svg class="icon" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10596"><path d="M1017.6 781.8c-1.2 8.2-3.2 16.2-6.2 22.4-5.4 11-10.6 12-31 11-26.4-1.2-64.2 0-104.2 1.6 0 11 0.4 16.2 0.4 16.2 2.6 30.2 16.2 31.2 21.6 31.2 6 0 78.4 0 86 0s14.6 0 20-3.6c7-4.6 10-18 12.6-41.4 0.4-3.4 0.6-7.8 0.8-13 0 0 0-0.2 0-0.2 0-1.6 0.2-3.6 0.2-5.8 0-0.8 0-1.6 0-2.2 0 0 0 0 0 0C1017.8 792.6 1017.8 786.6 1017.6 781.8zM6 781.8c1.2 8.2 3.2 16.2 6.2 22.4 5.4 11 10.6 12 31 11 26.4-1.2 64.2 0 104.2 1.6 0 11-0.4 16.2-0.4 16.2-2.6 30.2-16.2 31.2-21.6 31.2-6 0-78.4 0-86 0s-14 0-20-3.6c-7.2-4.2-10-18-12.6-41.4-0.4-3.4-0.6-7.8-0.8-13 0 0 0-0.2 0-0.2 0-1.6-0.2-3.6-0.2-5.8 0-0.8 0-1.6 0-2.2 0 0 0 0 0 0C6 792.6 6 786.6 6 781.8zM1024 593.2c0-61.4-8-121.4-11.2-128-2.4-4.8-17.8-17.4-52.8-41.2-35.4-24.2-34.6-20.6-41-36.4 5.8-1.8 11.4-5.2 14.8-5.6 7.6-0.8 8 6.4 23.8 6.4s50-4.2 57-11.2c7-7 9.2-9.4 9.2-15.6s-3.6-19-10.4-26.6-35.8-11.4-52.8-13.6-19.4 0-23.8 2.8c-7 4.4-7.4 44.6-7.4 44.6l-16.6 0.4c-10.8-26.6-25.8-80.2-49.2-122.4-25.6-46-52.4-60.4-63.6-64-11-3.4-21-5.8-96-13.4-76.6-8-137.6-9-192-9s-115.4 1.2-192 9c-75 7.8-85 10-96 13.4-11 3.4-38 18-63.6 64-23.4 42.2-38.4 95.8-49.2 122.4l-16.6-0.4c0 0-0.2-40.2-7.4-44.6-4.4-2.8-6.8-5.2-23.8-2.8s-46 6-52.8 13.6-10.4 20.4-10.4 26.6 2.2 8.8 9.2 15.6c7 7 41.2 11.2 57 11.2s16.2-7.2 23.8-6.4c3.4 0.4 9.2 3.8 14.8 5.6-6.6 15.8-5.6 12.2-41 36.4-35 24-50.6 36.4-52.8 41.2C8 471.8 0 531.8 0 593.2s4.4 116.6 4.4 136.2c0 8.2 0 22.6 1.8 36.4 1.2 8.2 3 16.2 6.2 22.4 5.4 11 10.4 12 31 11 26.4-1.2 64.6 0 104 1.6 26.4 1 53.4 2 77.4 2.6 60 1.2 42.4-8.8 68-8.4 25.6 0.4 126.6 4.6 219 4.6s193.6-4.2 219-4.6c25.6-0.4 8 9.6 68 8.4 24-0.4 51-1.6 77.4-2.6 39.4-1.4 77.8-2.8 104-1.6 20.6 1 25.6 0 31-11 3-6.2 5-14.2 6.2-22.4 2-13.8 1.8-28.2 1.8-36.4C1019.6 710 1024 654.6 1024 593.2zM172.4 290.4c9.6-22.4 38.4-67.4 52.4-75.4 3.4-2 33.2-11.4 107.8-16.4 68.6-4.6 144.4-6.4 179.6-6.4s111 1.8 179.6 6.4c74.4 5 104.6 14.2 107.8 16.4 18 12.4 42.8 53 52.4 75.4 9.6 22.4 22.4 66.4 20 72.4-2.4 6 2.4 9-30 6.4-32.2-2.4-234.4-5-329.6-5-95 0-297.2 2.6-329.6 5-32.4 2.4-27.6-0.4-30-6.4C150 356.8 162.8 313 172.4 290.4zM246 540.8c-14.4 3.6-23 11.4-41 11.2-18 0-66.6-8.2-77-8.6-10.4-0.4-19.6 7-25 8.4s-16-2.4-32-7.4-25.4-3.6-30.6-25.4c-5.4-21.6 0-52.6 0-52.6 34.6-1.6 68 1.6 130.6 19.2 62.6 17.6 97.4 51.4 97.4 51.4S260.4 537.2 246 540.8zM716.4 698.4c-28.6 3.8-148.4 4.8-204.4 4.8-56 0-175.8-1.2-204.4-4.8-29.2-3.8-67.2-38.8-41-66.6 35.4-37.8 28.8-36.6 109.2-47 69.6-9 122.4-9.4 136.2-9.4 13.6 0 66.6 0.6 136.2 9.4 80.4 10.4 73.8 9.2 109.2 47C783.6 659.6 745.6 694.6 716.4 698.4zM983.6 519.2c-5.4 21.6-14.6 20.4-30.6 25.4s-26.6 8.6-32 7.4-14.6-8.6-25-8.4c-10.4 0.4-59 8.6-77 8.6-18 0-26.6-7.6-41-11.2-14.4-3.6-22.4-3.6-22.4-3.6s34.6-34 97.4-51.4c62.6-17.6 96-20.8 130.6-19.2C983.6 466.4 989 497.4 983.6 519.2z" p-id="10597"></path></svg>',
             text: "外部模型",
@@ -377,7 +383,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
         layer.open({
             type: 2,
             title: title,
-            area: ["350px", "300px"],
+            area: ["550px", "400px"],
             content: url,
             btn: ['确定', '取消'],
             success: function (layero, index) {
@@ -441,8 +447,8 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                     });
                     cameraPostion = obj.parent.position;
 
-                    main.cacheObjs.push({ mesh: obj.parent, material: null });
-                    selectData = main.syncModelProperty(obj.parent);
+                    main.cacheObjs.push({ mesh: obj.name == "" ?obj.parent:obj, material: null });
+                    selectData = main.syncModelProperty(obj.name == "" ? obj.parent : obj);
                 }
             }
 
@@ -474,6 +480,77 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                     dgis3d.render();
                 });
                 return;
+                break;
+            case "path":
+
+                var geoJson = JSON.parse(data.geometry.path);
+                var features = geoJson.features;
+
+                let wrapper = new THREE.Object3D();
+                var minX = 99999999;
+                var minY = 99999999;
+                var maxX = -99999999;
+                var maxY = -99999999;
+
+                for (var i = 0; i < features.length; i++) {
+                    var feature = features[i];
+                    for (var n = 0; n < feature.geometry.coordinates.length; n++) {
+                        var pts = feature.geometry.coordinates[n];
+                        var points = [];
+                        for (var m = 0; m < pts.length; m++) {
+                            var pt = pts[m];
+                            points.push({ x: pt[0], y: pt[1] });
+                        }
+                        //创建面
+                        var polygon = dgis3d.geometry.polygon(points);
+                        //拉伸
+                        var shape = dgis3d.geometry.extrudeShape(polygon, data.geometry.h);
+
+                        //旋转
+                        var mesh = new THREE.Mesh(shape, dgis3d.material.colorMaterial(data.material.color, data.material.opacity, data.material.reflect));
+                        mesh.rotation.set(Math.PI / 2, 0, 0);
+                        mesh.updateMatrix();
+
+                        //计算相对位置
+                        var area = dgis3d.geometry.computeArea(points);
+                        if (minX > area.minX)
+                            minX = area.minX;
+                        if (minY > area.minY)
+                            minY = area.minY;
+                        if (maxX < area.maxX)
+                            maxX = area.maxX;
+                        if (maxY < area.maxY)
+                            maxY = area.maxY;
+                        var l = area.maxX - area.minX;
+                        var w = area.maxY - area.minY;
+                        var pt = dgis3d.geometry.getPosition({x:0,y:0,z:0}, l, w, data.geometry.h);
+                        mesh.position.set(0 - l / 2, data.geometry.h / 2, 0 - w / 2);
+
+
+                        let wrapper1 = new THREE.Object3D();
+                        wrapper1.add(mesh);
+                        wrapper1.rotation.set(data.angle.x, data.angle.y, data.angle.z);
+
+                        wrapper1.position.set(pt.x, pt.y, pt.z);
+                        //wrapper1.name = data.name;
+
+                        wrapper.add(wrapper1);
+                    }
+                }
+
+                var l = maxX - minX;
+                var w = maxY - minY;
+
+                data.geometry.l = dgis3d.sceneRange.l;
+                data.geometry.w = dgis3d.sceneRange.w;
+
+                //var pt = dgis3d.geometry.getPosition(data.position, l, w, data.geometry.h);
+                //wrapper.position.set(pt.x, pt.y, pt.z);
+                wrapper.position.set(data.position.x,  data.position.z,data.position.y);
+                wrapper.rotation.set(data.angle.x, data.angle.y, data.angle.z);
+                wrapper.name = data.name;
+
+                return wrapper;
                 break;
         }
 
@@ -525,6 +602,8 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                 break;
             case "obj":
                 url = "/pages/modeling/obj.html";
+            case "path":
+                url = "/pages/modeling/path.html";
                 break;
         }
 
@@ -557,6 +636,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                 if (model.name == data.name) {
                     dgis3d.scene.remove(model);
                     main.cacheObjs.splice(i, 1);
+                    dgis3d.render();
                     break;
                 }
             }
