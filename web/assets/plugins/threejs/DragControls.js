@@ -89,9 +89,10 @@ THREE.DragControls = function (_objects, _camera, _domElement) {
 
         if (intersects.length > 0) {
 
-            var object = intersects[0].object;
+            var object = intersects[0].object;            
 
             _plane.setFromNormalAndCoplanarPoint(_camera.getWorldDirection(_plane.normal), object.position);
+            
 
             if (_hovered !== object) {
 
@@ -99,7 +100,6 @@ THREE.DragControls = function (_objects, _camera, _domElement) {
 
                 _domElement.style.cursor = 'pointer';
                 _hovered = object;
-
             }
 
         } else {
@@ -128,6 +128,11 @@ THREE.DragControls = function (_objects, _camera, _domElement) {
         if (intersects.length > 0) {
 
             _selected = intersects[0].object;
+            //为了适应使用了group的外部模型和path拉伸模型，选中对象修改为最外层容器
+            if(!(_selected.parent instanceof THREE.Scene))
+            {                   
+                _selected=_selected.parent.parent;
+            }
 
             if (_raycaster.ray.intersectPlane(_plane, _intersection)) {
 
@@ -149,11 +154,11 @@ THREE.DragControls = function (_objects, _camera, _domElement) {
         event.preventDefault();
 
         if (_selected) {
-
             scope.dispatchEvent({type: 'dragend', object: _selected});
 
+            console.log("1:"+_selected.position.x);
+            
             _selected = null;
-
         }
 
         _domElement.style.cursor = _hovered ? 'pointer' : 'auto';
@@ -205,6 +210,11 @@ THREE.DragControls = function (_objects, _camera, _domElement) {
         if (intersects.length > 0) {
 
             _selected = intersects[0].object;
+            //为了适应使用了group的外部模型和path拉伸模型，选中对象修改为最外层容器
+            if(!(_selected.parent instanceof THREE.Scene))
+            {                   
+                _selected=_selected.parent.parent;
+            }
 
             _plane.setFromNormalAndCoplanarPoint(_camera.getWorldDirection(_plane.normal), _selected.position);
 

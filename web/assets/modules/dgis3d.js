@@ -512,7 +512,6 @@ define(function () {
 
 
             callBack(objs[0]);
-
         }
     }
 

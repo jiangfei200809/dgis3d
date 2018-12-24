@@ -52,7 +52,9 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                     if (e.Success) {
                         main.datas = JSON.parse(e.Content.json);
                         for (var i = 0; i < main.datas.length; i++) {
-                            var mesh = main.buildModel(main.datas[i]);
+                            var mesh = main.buildModel(main.datas[i], function (obj) {
+                                dgis3d.scene.add(obj);
+                            });
                             if (mesh != null)
                                 dgis3d.scene.add(mesh);
                         }
@@ -66,13 +68,15 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
 
         }).on("click", function (e) {
             main.orbitControls.enabled = true;
-            main.dragControls.enabled = false;
+            if (main.event != "move" && main.dragControls != null) {
+                main.dragControls.dispose();
+                main.dragControls = null;
+            }
 
             if (main.event == "select") {
                 main.selectModel(e);
             } else if (main.event == "move") {
                 main.orbitControls.enabled = false;
-                main.dragControls.enabled = true;
             }
 
         });
@@ -95,21 +99,21 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             text: "新建",
             index: 0,
             color: "darkslategray",
-            click: "main.toolbar.new()"
+            click: "main.toolbarEvent.new()"
         });
         menus.push({
             svg: '<svg class="icon" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3447"><path d="M928.16 144H736V64a32 32 0 0 0-32-32H320a32 32 0 0 0-32 32v80H95.84a32 32 0 0 0 0 64H129.6l77.92 698.656A96 96 0 0 0 302.912 992h418.144a96.032 96.032 0 0 0 95.424-85.344L894.4 208h33.728a32 32 0 0 0 0.032-64zM352 96h320v48H352V96z m400.896 803.552a32 32 0 0 1-31.808 28.448H302.912a32 32 0 0 1-31.808-28.448L193.984 208h636.032l-77.12 691.552zM608 820.928a32 32 0 0 0 32-32V319.104a32 32 0 0 0-64 0v469.824a32 32 0 0 0 32 32zM432 820.928a32 32 0 0 0 32-32V319.104a32 32 0 0 0-64 0v469.824a32 32 0 0 0 32 32z" p-id="3448"></path></svg>',
             text: "删除",
             index: 1,
             color: "darkslategray",
-            click: "main.toolbar.del()"
+            click: "main.toolbarEvent.del()"
         });
         menus.push({
             svg: '<svg class="icon" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2735"><path d="M321.051906 916.481888C181.547648 850.785498 81.714093 715.074259 66.34498 554.683771H2.356269c21.75649 262.818402 241.488832 469.316229 509.857191 469.316229l28.143867-1.264339-162.541507-162.557927-56.763914 56.304154z m37.979443-278.187515a70.770168 70.770168 0 0 1-22.18341-3.415358c-6.847137-2.545099-12.364254-5.566377-17.076793-10.246076a42.396421 42.396421 0 0 1-11.099915-15.779613 51.148277 51.148277 0 0 1-3.825858-20.048811h-55.466735c0 15.352693 2.988439 29.014127 8.948896 40.508122a94.185078 94.185078 0 0 0 23.891089 29.457467 107.715152 107.715152 0 0 0 34.991005 17.487292c12.791174 4.269198 26.452608 6.403797 40.967881 6.403797 15.779613 0 30.721806-2.134599 43.9399-6.403797 13.661434-4.285618 25.615188-10.656575 35.401504-18.800891a84.398762 84.398762 0 0 0 23.48059-30.688967 99.997755 99.997755 0 0 0 8.521976-41.394801c0-8.111476-0.85384-16.206533-2.988439-23.891089s-5.123038-14.925773-9.819155-21.75649c-4.269198-6.814297-10.229655-12.774754-17.060373-18.341132-7.241217-5.549958-15.796033-9.819156-26.042108-13.234514a89.20982 89.20982 0 0 0 37.995863-31.986146c4.269198-6.403797 7.241217-12.791174 9.392236-19.621891 2.134599-6.830717 2.972019-13.661434 2.972019-20.475731 0-15.369113-2.561519-29.030547-7.668137-40.967881a75.942466 75.942466 0 0 0-21.77291-29.441047c-8.538396-8.095056-20.065231-14.055514-32.856405-18.341132a155.85857 155.85857 0 0 0-43.496561-5.960457c-15.369113 0-29.441047 2.134599-42.659141 6.830717-12.807594 4.679698-24.318009 11.083495-33.710245 19.194971a95.580777 95.580777 0 0 0-21.75649 28.587207 84.874942 84.874942 0 0 0-7.684556 36.255344h55.466735c0-7.241217 1.280759-13.645014 3.825858-19.194972 2.561519-5.549958 5.976877-10.656575 10.672995-14.515273 4.696118-3.825858 9.819156-7.241217 16.206533-9.375816 6.403797-2.134599 12.807594-3.415358 20.475731-3.415358 17.076792 0 29.867967 4.269198 37.979443 13.234514 8.095056 8.538396 12.364254 20.902651 12.364254 36.682263 0 7.684557-1.280759 14.515273-3.415358 20.902651s-5.976877 11.510415-10.672996 15.796033a54.317336 54.317336 0 0 1-17.487292 10.229655c-6.847137 2.561519-15.369113 3.842278-24.744929 3.842278h-32.839985v43.939901h32.839985c9.392236 0 17.914212 0.85384 25.598769 2.988438 7.684557 2.134599 14.071934 5.549958 19.194971 9.802736 5.123038 4.696118 9.392236 10.246075 12.380675 17.093212 2.988439 6.797877 4.252778 14.942193 4.252778 24.318009 0 17.470872-5.123038 30.688966-14.942193 39.670703-9.769896 9.802736-23.431329 14.071934-40.491702 14.071933z m364.819396-252.572326a142.624056 142.624056 0 0 0-48.652438-32.856406c-18.341132-7.684557-39.276622-11.510415-62.297452-11.510414h-100.687395v341.322386h98.125876c23.480589 0 45.23708-3.825858 64.432051-11.526834 19.194971-7.684557 35.844844-18.341132 49.489858-32.429486a143.806295 143.806295 0 0 0 31.592065-50.770617c7.241217-20.065231 11.083495-42.232221 11.083495-66.97715v-17.076792c0-24.744929-3.825858-46.911919-11.083495-66.97715-7.717397-20.065231-18.357552-37.125603-32.002565-51.197537z m-16.649873 134.824559a187.187916 187.187916 0 0 1-5.976877 48.225518c-4.269198 14.071934-10.246075 26.436188-18.341132 36.271764a79.932524 79.932524 0 0 1-30.311306 22.61033c-12.364254 5.123038-26.436188 7.668137-42.232221 7.668137h-38.816863V389.137405h41.394802c30.721806 0 54.185976 9.819156 69.982008 29.441047 16.206533 19.621891 24.318009 47.782179 24.318009 84.907782v17.060372h-0.01642zM512.19704 0l-28.160287 1.280759 162.557927 162.557927 56.747494-56.747494C842.862851 173.214502 942.696407 308.482401 957.6386 468.905729h63.988711C1000.314161 206.530667 780.581819 0 512.19704 0z" fill="" p-id="2736"></path></svg>',
             text: "控制",
             index: 2,
             color: "darkslategray",
-            click: "main.toolbar.control()"
+            click: "main.toolbarEvent.control()"
         });
 
         menus.push({
@@ -117,42 +121,42 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             text: "选择",
             index: 3,
             color: "darkslategray",
-            click: "main.toolbar.slt()"
+            click: "main.toolbarEvent.slt()"
         });
         menus.push({
             svg: '<svg class="icon" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7603"><path d="M430.933333 985.6l-221.866666-277.333333s-12.8-102.4 89.6-59.733334c55.466667 25.6 76.8 81.066667 76.8 81.066667V311.466667s59.733333-89.6 110.933333 0v264.533333s64-85.333333 140.8 4.266667c0 0 55.466667-93.866667 136.533333 4.266666 0 0 42.666667-64 93.866667-4.266666 12.8 17.066667 21.333333 42.666667 17.066667 64l-21.333334 200.533333c-4.266667 55.466667-34.133333 106.666667-81.066666 136.533333" fill="#FBFBFC" p-id="7604"></path><path d="M430.933333 1006.933333c-4.266667 0-12.8-4.266667-17.066666-8.533333L192 725.333333c-4.266667-4.266667-4.266667-8.533333-4.266667-12.8 0-4.266667-4.266667-55.466667 29.866667-81.066666 21.333333-17.066667 51.2-17.066667 89.6 0 17.066667 8.533333 34.133333 21.333333 46.933333 34.133333V311.466667c0-4.266667 0-8.533333 4.266667-12.8 4.266667-4.266667 34.133333-51.2 76.8-46.933334 25.6 0 51.2 17.066667 68.266667 51.2 0 4.266667 4.266667 8.533333 4.266666 8.533334v217.6c12.8-8.533333 25.6-12.8 42.666667-12.8 25.6 0 51.2 8.533333 72.533333 29.866666 12.8-12.8 34.133333-25.6 59.733334-29.866666 25.6 0 51.2 8.533333 76.8 34.133333 12.8-8.533333 25.6-17.066667 46.933333-17.066667 21.333333 0 42.666667 8.533333 64 34.133334 17.066667 21.333333 25.6 51.2 21.333333 76.8l-21.333333 200.533333c-8.533333 64-38.4 119.466667-89.6 153.6-8.533333 4.266667-21.333333 4.266667-29.866667-4.266667-8.533333-8.533333-4.266667-21.333333 4.266667-29.866666 38.4-25.6 64-72.533333 72.533333-123.733334l21.333334-200.533333c0-17.066667-4.266667-34.133333-12.8-46.933333-8.533333-12.8-17.066667-21.333333-29.866667-17.066667-12.8 0-25.6 17.066667-29.866667 21.333333-4.266667 4.266667-8.533333 8.533333-17.066666 8.533334s-12.8-4.266667-17.066667-8.533334c-12.8-17.066667-34.133333-38.4-59.733333-38.4-25.6 0-42.666667 29.866667-42.666667 29.866667-4.266667 4.266667-8.533333 8.533333-17.066667 8.533333s-12.8-4.266667-17.066666-8.533333c-21.333333-25.6-38.4-34.133333-55.466667-34.133333-25.6 0-46.933333 29.866667-46.933333 29.866666-4.266667 8.533333-17.066667 8.533333-25.6 8.533334-8.533333-4.266667-12.8-12.8-12.8-21.333334V311.466667c-8.533333-12.8-17.066667-25.6-29.866667-25.6-12.8 0-29.866667 17.066667-38.4 25.6V725.333333c0 8.533333-8.533333 17.066667-17.066667 21.333334-8.533333 0-21.333333-4.266667-25.6-12.8 0 0-17.066667-46.933333-68.266666-68.266667-21.333333-8.533333-38.4-12.8-46.933334-4.266667-8.533333 8.533333-12.8 25.6-12.8 38.4l217.6 268.8c8.533333 8.533333 4.266667 21.333333-4.266666 29.866667 0 8.533333-4.266667 8.533333-8.533334 8.533333z" fill="#788698" p-id="7605"></path><path d="M264.533333 529.066667c-4.266667 0-12.8 0-17.066666-4.266667A282.88 282.88 0 0 1 128 294.4C128 140.8 256 17.066667 409.6 17.066667s281.6 123.733333 281.6 281.6c0 64-21.333333 128-64 179.2-12.8 12.8-29.866667 17.066667-46.933333 4.266666-12.8-12.8-17.066667-29.866667-4.266667-46.933333 29.866667-38.4 51.2-85.333333 51.2-136.533333 0-119.466667-98.133333-217.6-217.6-217.6s-217.6 93.866667-217.6 213.333333c0 68.266667 34.133333 136.533333 93.866667 174.933333 12.8 8.533333 17.066667 29.866667 8.533333 42.666667-8.533333 12.8-17.066667 17.066667-29.866667 17.066667z" fill="#2BA5E3" p-id="7606"></path></svg>',
             text: "移动",
             index: 4,
             color: "darkslategray",
-            click: "main.toolbar.move()"
+            click: "main.toolbarEvent.move()"
         });
         menus.push({
             svg: '<svg class="icon" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10769"><path d="M964 751.968h-600A59.968 59.968 0 0 1 304 692V91.968C304 58.88 330.848 32 364 32h600C997.152 32 1024 58.88 1024 91.968v600.032a59.968 59.968 0 0 1-60 59.968z m0-629.984a30.016 30.016 0 0 0-30.016-30.016H393.984a29.984 29.984 0 0 0-29.984 30.016v540c0 16.608 13.44 30.016 29.984 30.016h540a29.984 29.984 0 0 0 30.016-30.016V121.984z m-840 240.064v539.968c0 16.576 13.44 30.016 30.016 30.016h540a29.984 29.984 0 0 0 30.016-30.016v-89.984H784v120A60 60 0 0 1 724 992H124A60 60 0 0 1 64 932v-600C64 298.848 90.848 272 124 272h120v60H154.016a30.016 30.016 0 0 0-30.016 30.048z" p-id="10770"></path></svg>',
             text: "合并",
             index: 5,
             color: "darkslategray",
-            click: "main.toolbar.merge()"
+            click: "main.toolbarEvent.merge()"
         });
         menus.push({
             svg: '<svg class="icon" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10250"><path d="M267.726077 1024a185.759637 185.759637 0 1 1 185.759637-185.759637 185.759637 185.759637 0 0 1-185.759637 185.759637z m0-278.639456a92.879819 92.879819 0 1 0 92.879819 92.879819 92.879819 92.879819 0 0 0-92.879819-92.879819zM756.273923 1024a185.759637 185.759637 0 1 1 185.759637-185.759637 185.759637 185.759637 0 0 1-185.759637 185.759637z m0-278.639456a92.879819 92.879819 0 1 0 92.879818 92.879819 92.879819 92.879819 0 0 0-92.879818-92.879819z" p-id="10251"></path><path d="M350.389116 760.685714a46.439909 46.439909 0 0 1-27.863946-9.287982 46.439909 46.439909 0 0 1-9.752381-65.015873L800.391837 28.328345a46.439909 46.439909 0 0 1 65.015873-9.752381 46.439909 46.439909 0 0 1 9.752381 65.015873L387.541043 743.038549a46.439909 46.439909 0 0 1-37.151927 17.647165z" p-id="10252"></path><path d="M673.610884 760.685714a46.439909 46.439909 0 0 1-37.151927-19.040363L148.839909 83.591837A46.439909 46.439909 0 0 1 158.59229 18.575964a46.439909 46.439909 0 0 1 65.015873 9.752381l487.619048 658.053514a46.439909 46.439909 0 0 1-9.752381 65.015873 46.439909 46.439909 0 0 1-27.863946 9.287982z" p-id="10253"></path></svg>',
             text: "裁剪",
             index: 6,
             color: "darkslategray",
-            click: "main.toolbar.clip()"
+            click: "main.toolbarEvent.clip()"
         });
         menus.push({
             svg: '<svg class="icon" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2973"><path d="M433.257931 0L18.220138 216.734897l3.707586 6.779586L17.655172 222.631724v666.376828l558.962759 130.295172L1006.344828 786.078897V108.932414L433.257931 0zM57.979586 231.212138L437.954207 32.979862l518.17931 102.4L575.205517 341.203862 58.014897 231.212138z m-10.663724 634.526896V258.930759l501.300966 106.354758v614.4L47.351172 865.739034z" p-id="2974"></path></svg>',
             text: "视图切换",
             index: 7,
             color: "darkslategray",
-            click: "main.toolbar.view()"
+            click: "main.toolbarEvent.view()"
         });
         menus.push({
             svg: '<svg class="icon" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1"            xmlns="http://www.w3.org/2000/svg" p-id="1543">            <path d="M941.248 352L672 82.752A64 64 0 0 0 626.752 64H128a64 64 0 0 0-64 64v768a64 64 0 0 0 64 64h768a64 64 0 0 0 64-64V397.248A64 64 0 0 0 941.248 352zM256 128h48v160H256V128z m112 0H512v160h-144V128zM256 896v-192h512v192H256z m640 0h-64v-224a32 32 0 0 0-32-32H224a32 32 0 0 0-32 32v224H128V128h64v192a32 32 0 0 0 32 32h320a32 32 0 0 0 32-32V128h50.752L896 397.248V896z"                p-id="1544"></path>        </svg>',
             text: "保存",
             index: 10,
             color: "darkslategray",
-            click: "main.toolbar.save()",
+            click: "main.toolbarEvent.save()",
             split: false
         });
 
@@ -180,7 +184,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
     /**
      * 工具栏事件
      */
-    main.toolbar = {
+    main.toolbarEvent = {
         new: function () {
             main.event = "control";
             window.location.href = "/";
@@ -210,6 +214,35 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
         },
         move: function () {
             main.event = "move";
+
+            if (main.dragControls != null) {
+                main.dragControls.dispose();
+                main.dragControls = null;
+            }
+
+            //拖拽
+            var scensObjs = [];
+            dgis3d.scene.children.forEach(child => {
+                if (child instanceof THREE.Mesh && child.children.length == 0) {
+                    scensObjs.push(child);
+                } else {
+                    for (var i = 0;
+                        i < child.children.length;
+                        i++
+                    ) {
+                        if (child.children.length > 0) {
+                            var grop = child.children[i];
+                            for (var n = 0; n < grop.children.length; n++) {
+                                scensObjs.push(grop.children[n]);
+                            }
+                        }
+                    }
+                }
+            });
+
+
+            main.dragControls = new THREE.DragControls(scensObjs, dgis3d.camera, dgis3d.renderer.domElement);
+            main.dragControls.enabled = true;
         },
         control: function () {
             main.event = "control";
@@ -327,10 +360,6 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
         main.orbitControls.autoRotate = false;//将自动旋转关闭
         main.clock = new THREE.Clock();//用于更新轨道控制器
 
-        //拖拽
-        main.dragControls = new THREE.DragControls(dgis3d.scene.children, dgis3d.camera, dgis3d.renderer.domElement);
-        main.dragControls.enabled = false;
-
         //视角固定        
         dgis3d.view(main.viewType);
         main.orbitControls.update();
@@ -387,6 +416,12 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             content: url,
             btn: ['确定', '取消'],
             success: function (layero, index) {
+
+                if (main.dragControls != null) {
+                    main.dragControls.dispose();
+                    main.dragControls = null;
+                }
+
                 var iframeWin = window[layero.find('iframe')[0]['name']];
                 iframeWin.main.init();
 
@@ -395,10 +430,11 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             yes: function (index, layero) {
                 var iframeWin = window[layero.find('iframe')[0]['name']];
                 var data = iframeWin.main.vueObj.Data;
-                var mesh = main.buildModel(data);
-                dgis3d.scene.add(mesh);
-                main.datas.push(data);
-                dgis3d.render();
+                var mesh = main.buildModel(data, function (obj) {
+                    dgis3d.scene.add(obj);
+                    main.datas.push(data);
+                    dgis3d.render();
+                });
 
                 layer.close(index);
             },
@@ -447,7 +483,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                     });
                     cameraPostion = obj.parent.position;
 
-                    main.cacheObjs.push({ mesh: obj.name == "" ?obj.parent:obj, material: null });
+                    main.cacheObjs.push({ mesh: obj.name == "" ? obj.parent : obj, material: null });
                     selectData = main.syncModelProperty(obj.name == "" ? obj.parent : obj);
                 }
             }
@@ -463,7 +499,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
      * 创建模型
      * @param {*} data
      */
-    main.buildModel = function (data) {
+    main.buildModel = function (data, func) {
         //创建结构
         var geometry;
         switch (data.geometry.type) {
@@ -476,8 +512,12 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             case "obj":
                 dgis3d.geometry.model(data.geometry.l, data.geometry.w, data.geometry.h, data.material.path + ".mtl", data.material.path + ".obj", data.angle, data.position, function (obj) {
                     obj.name = data.name;
+                    func(obj);
+                    /*
+                    obj.name = data.name;
                     dgis3d.scene.add(obj);
                     dgis3d.render();
+                    */
                 });
                 return;
                 break;
@@ -523,7 +563,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                             maxY = area.maxY;
                         var l = area.maxX - area.minX;
                         var w = area.maxY - area.minY;
-                        var pt = dgis3d.geometry.getPosition({x:0,y:0,z:0}, l, w, data.geometry.h);
+                        var pt = dgis3d.geometry.getPosition({ x: 0, y: 0, z: 0 }, l, w, data.geometry.h);
                         mesh.position.set(0 - l / 2, data.geometry.h / 2, 0 - w / 2);
 
 
@@ -546,11 +586,11 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
 
                 //var pt = dgis3d.geometry.getPosition(data.position, l, w, data.geometry.h);
                 //wrapper.position.set(pt.x, pt.y, pt.z);
-                wrapper.position.set(data.position.x,  data.position.z,data.position.y);
+                wrapper.position.set(data.position.x, data.position.z, data.position.y);
                 wrapper.rotation.set(data.angle.x, data.angle.y, data.angle.z);
                 wrapper.name = data.name;
 
-                return wrapper;
+                func(wrapper);
                 break;
         }
 
@@ -576,9 +616,10 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             var pt = dgis3d.geometry.getPosition(data.position, data.geometry.l, data.geometry.w, data.geometry.h);
             mesh.position.set(pt.x, pt.y, pt.z);
             mesh.name = data.name;
+            if (func != null)
+                func(mesh);
 
             return mesh;
-
         }
     };
 
@@ -602,6 +643,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                 break;
             case "obj":
                 url = "/pages/modeling/obj.html";
+                break;
             case "path":
                 url = "/pages/modeling/path.html";
                 break;
@@ -635,25 +677,33 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                 var model = main.cacheObjs[i].mesh;
                 if (model.name == data.name) {
                     dgis3d.scene.remove(model);
-                    main.cacheObjs.splice(i, 1);
+                    //main.cacheObjs.splice(i, 1);
+                    main.cacheObjs = [];
+
+                    //创建新模型
+                    var newModel = main.buildModel(data, function (obj) {
+                        dgis3d.scene.add(obj);
+                        main.cacheObjs.push({
+                            mesh: obj,
+                            material: obj.material
+                        });
+                    });
+                    if (newModel != null) {
+                        dgis3d.scene.add(newModel);
+                        main.cacheObjs.push({
+                            mesh: newModel,
+                            material: newModel.material
+                        });
+                    }
+
+                    //缓存替换
+                    var oldData = common.getItemInItems(main.datas, "name", data.name);
+                    oldData = data;
+
                     dgis3d.render();
                     break;
                 }
             }
-
-            //创建新模型
-            var newModel = main.buildModel(data);
-            if (newModel != null) {
-                dgis3d.scene.add(newModel);
-                main.cacheObjs.push({
-                    mesh: newModel,
-                    material: newModel.material
-                });
-            }
-
-            //缓存替换
-            var oldData = common.getItemInItems(main.datas, "name", data.name);
-            oldData = data;
         }
     };
 
