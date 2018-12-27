@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SysConfig>
+
+<!--SQLite配置-->
+<Config SqliteDbPath="H:\Work\Develop\Web\ThreeJS\Data\dgis3d.db3"></Config>
+
+<!--Redis配置-->
+<Config RedisIp="127.0.0.1"></Config>
+<Config RedisPort="6379"></Config>
+<Config RedisOutTime="100"></Config>
+
+<!--MongoDB配置-->
+<Config MongoIp="127.0.0.1"></Config>
+<Config MongoPort="27017"></Config>
+<Config MongoDataBase="admin"></Config>
+<Config MongoUserName="root"></Config>
+<Config MongoPsw="root"></Config>
+
+<!--网站路径，网站需要包括Upload、Cache两个文件夹-->
+<Config WebPath="H:\Work\Develop\Web\ThreeJS\web\"></Config>
+
+<!--秘钥key-->
+<Config DesKey="dgis3d"></Config>
+
+<!--登录过期时间-->
+<Config LoginOutTime="1200"></Config>
+</SysConfig>

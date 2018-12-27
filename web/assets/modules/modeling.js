@@ -130,6 +130,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             color: "darkslategray",
             click: "main.toolbarEvent.move()"
         });
+        /*
         menus.push({
             svg: '<svg class="icon" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10769"><path d="M964 751.968h-600A59.968 59.968 0 0 1 304 692V91.968C304 58.88 330.848 32 364 32h600C997.152 32 1024 58.88 1024 91.968v600.032a59.968 59.968 0 0 1-60 59.968z m0-629.984a30.016 30.016 0 0 0-30.016-30.016H393.984a29.984 29.984 0 0 0-29.984 30.016v540c0 16.608 13.44 30.016 29.984 30.016h540a29.984 29.984 0 0 0 30.016-30.016V121.984z m-840 240.064v539.968c0 16.576 13.44 30.016 30.016 30.016h540a29.984 29.984 0 0 0 30.016-30.016v-89.984H784v120A60 60 0 0 1 724 992H124A60 60 0 0 1 64 932v-600C64 298.848 90.848 272 124 272h120v60H154.016a30.016 30.016 0 0 0-30.016 30.048z" p-id="10770"></path></svg>',
             text: "合并",
@@ -144,6 +145,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             color: "darkslategray",
             click: "main.toolbarEvent.clip()"
         });
+        */
         menus.push({
             svg: '<svg class="icon" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2973"><path d="M433.257931 0L18.220138 216.734897l3.707586 6.779586L17.655172 222.631724v666.376828l558.962759 130.295172L1006.344828 786.078897V108.932414L433.257931 0zM57.979586 231.212138L437.954207 32.979862l518.17931 102.4L575.205517 341.203862 58.014897 231.212138z m-10.663724 634.526896V258.930759l501.300966 106.354758v614.4L47.351172 865.739034z" p-id="2974"></path></svg>',
             text: "视图切换",
@@ -157,6 +159,15 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             index: 10,
             color: "darkslategray",
             click: "main.toolbarEvent.save()",
+            split: false
+        });
+
+        menus.push({
+            svg: '<svg class="icon" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1756"><path d="M938.666667 853.333333h-853.333334C37.546667 853.333333 0 815.786667 0 768v-512C0 208.213333 37.546667 170.666667 85.333333 170.666667h853.333334C986.453333 170.666667 1024 208.213333 1024 256v512c0 47.786667-37.546667 85.333333-85.333333 85.333333zM85.333333 204.8C58.026667 204.8 34.133333 228.693333 34.133333 256v512c0 27.306667 23.893333 51.2 51.2 51.2h853.333334c27.306667 0 51.2-23.893333 51.2-51.2v-512c0-27.306667-23.893333-51.2-51.2-51.2h-853.333334z" fill="" p-id="1757"></path><path d="M501.76 546.133333c-23.893333 0-51.2-6.826667-68.266667-20.48L109.226667 303.786667c-6.826667-3.413333-10.24-17.066667-3.413334-23.893334 3.413333-6.826667 13.653333-10.24 23.893334-3.413333l324.266666 221.866667c27.306667 20.48 71.68 20.48 98.986667 0l341.333333-221.866667c6.826667-6.826667 17.066667-3.413333 23.893334 3.413333s3.413333 17.066667-3.413334 23.893334l-341.333333 221.866666c-20.48 13.653333-44.373333 20.48-71.68 20.48zM119.466667 750.933333c-3.413333 0-10.24-3.413333-13.653334-6.826666-6.826667-6.826667-6.826667-17.066667 3.413334-23.893334l238.933333-204.8c6.826667-6.826667 17.066667-6.826667 23.893333 3.413334 6.826667 6.826667 6.826667 17.066667-3.413333 23.893333l-238.933333 204.8c-3.413333 3.413333-6.826667 3.413333-10.24 3.413333zM904.533333 750.933333c-3.413333 0-6.826667 0-10.24-3.413333l-238.933333-204.8c-6.826667-6.826667-6.826667-17.066667-3.413333-23.893333s17.066667-6.826667 23.893333-3.413334l238.933333 204.8c6.826667 6.826667 6.826667 17.066667 3.413334 23.893334-3.413333 3.413333-10.24 6.826667-13.653334 6.826666z" fill="" p-id="1758"></path></svg>',
+            text: "邮件",
+            index: 11,
+            color: "darkslategray",
+            click: "main.toolbarEvent.email()",
             split: false
         });
 
@@ -200,7 +211,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                     dgis3d.render();
 
                     for (var i = 0; i < main.datas.length; i++) {
-                        if (main.datas[i].name == model.name) {
+                        if (main.datas[i].name == model.mesh.name) {
                             main.datas.splice(i, 1);
                             break;
                         }
@@ -271,6 +282,39 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                     layer.msg("保存模型失败", { icon: 2 });
                 }
             });
+        },
+        email: function () {
+            layer.prompt({
+                title:"请输入邮箱地址",
+                formType: 0,
+                area: ['500px','300px']
+            },function (email, index) {
+                /*01 保存模型 */
+                var data = {
+                    json: JSON.stringify(main.datas),
+                    uid: common.getUrlParam("id")
+                };
+                syncRequest.post("/webapi/model/save", data, function (e) {
+                    if (e.Success) {
+                        var uid = e.Content;
+                        var data = {
+                            id: uid,
+                            email: email
+                        };
+
+                        /*02 发送邮件 */
+                        syncRequest.post("/webapi/model/email", data, function (e) {
+                            layer.msg(e.Msg, { icon: 1 });
+                        });
+                    } else {
+                        layer.msg("保存模型失败", { icon: 2 });
+                    }
+                });
+                layer.close(index);
+            });
+
+
+
         }
     };
 

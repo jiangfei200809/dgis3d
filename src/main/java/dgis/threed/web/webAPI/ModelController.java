@@ -80,8 +80,8 @@ public class ModelController {
      */
     @RequestMapping("/model/email")
     public ResultObj Email(String id,String email){
-        boolean result= SceneService.GetInstance().MailScene(id,email);
-        ResultObj resultObj=new ResultObj(result,"",null,0,"");
+        SceneService.GetInstance().AddMailScene(id,email);
+        ResultObj resultObj=new ResultObj(true,"请求已经提交队列",null,0,"");
         return resultObj;
     }
 
