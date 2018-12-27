@@ -426,7 +426,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                 opacity: 1,
                 reflect: true,
                 path: "",
-                repeat: [1, 1]
+                repeat: [30, 22]
             },
             angle: {
                 x: 0,
@@ -556,6 +556,12 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             case "obj":
                 dgis3d.geometry.model(data.geometry.l, data.geometry.w, data.geometry.h, data.material.path + ".mtl", data.material.path + ".obj", data.angle, data.position, function (obj) {
                     obj.name = data.name;
+                    for(var i=0;i<obj.children[0].children.length;i++){
+                        var child=obj.children[0].children[i];
+                        child.material.transparent= data.material.opacity < 1;
+                        child.material.opacity= data.material.opacity;
+                    }                    
+
                     func(obj);
                     /*
                     obj.name = data.name;
