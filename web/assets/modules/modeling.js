@@ -130,6 +130,13 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             color: "darkslategray",
             click: "main.toolbarEvent.move()"
         });
+        menus.push({
+            svg: '<svg class="icon" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1764"><path d="M746.932 698.108M925.731 288.698c-1.261-1.18-3.607-3.272-6.902-6.343-5.486-5.112-11.615-10.758-18.236-16.891-18.921-17.526-38.003-35.028-56.046-51.397-2.038-1.848-2.038-1.835-4.077-3.682-24.075-21.795-44.156-39.556-58.996-52.076-8.682-7.325-15.517-12.807-20.539-16.426-3.333-2.402-6.043-4.13-8.715-5.396-3.365-1.595-6.48-2.566-10.905-2.483C729.478 134.227 720 143.77 720 155.734l0 42.475 0 42.475 0 84.95L720 347l21.205 0L890 347l0 595L358.689 942C323.429 942 295 913.132 295 877.922L295 177l361.205 0c11.736 0 21.25-9.771 21.25-21.5s-9.514-21.5-21.25-21.5l-382.5 0L252 134l0 21.734L252 813l-52.421 0C166.646 813 140 786.928 140 754.678L140 72l566.286 0C739.29 72 766 98.154 766 130.404L766 134l40 0 0-3.596C806 76.596 761.271 33 706.286 33L119.958 33 100 33l0 19.506 0 702.172C100 808.463 144.642 852 199.579 852L252 852l0 25.922C252 936.612 299.979 984 358.689 984l552.515 0L932 984l0-21.237L932 325.635 932 304l0.433 0C932.432 299 930.196 292.878 925.731 288.698zM762 304l0-63.315L762 198.21l0-0.273c14 11.479 30.3 26.369 49.711 43.942 2.022 1.832 2.136 1.832 4.157 3.665 17.923 16.259 36.957 33.492 55.779 50.926 2.878 2.666 5.713 5.531 8.391 7.531L762 304.001zM816.936 436 407.295 436c-10.996 0-19.91 8.727-19.91 19.5 0 10.77 8.914 19.5 19.91 19.5l409.641 0c11 0 19.914-8.73 19.914-19.5C836.85 444.727 827.936 436 816.936 436zM816.936 553 407.295 553c-10.996 0-19.91 8.727-19.91 19.5 0 10.774 8.914 19.5 19.91 19.5l409.641 0c11 0 19.914-8.726 19.914-19.5C836.85 561.727 827.936 553 816.936 553zM816.936 689 407.295 689c-10.996 0-19.91 8.729-19.91 19.503 0 10.769 8.914 19.497 19.91 19.497l409.641 0c11 0 19.914-8.729 19.914-19.497C836.85 697.729 827.936 689 816.936 689z" p-id="1765"></path></svg>',
+            text: "复制",
+            index: 5,
+            color: "darkslategray",
+            click: "main.toolbarEvent.copy()"
+        });
         /*
         menus.push({
             svg: '<svg class="icon" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10769"><path d="M964 751.968h-600A59.968 59.968 0 0 1 304 692V91.968C304 58.88 330.848 32 364 32h600C997.152 32 1024 58.88 1024 91.968v600.032a59.968 59.968 0 0 1-60 59.968z m0-629.984a30.016 30.016 0 0 0-30.016-30.016H393.984a29.984 29.984 0 0 0-29.984 30.016v540c0 16.608 13.44 30.016 29.984 30.016h540a29.984 29.984 0 0 0 30.016-30.016V121.984z m-840 240.064v539.968c0 16.576 13.44 30.016 30.016 30.016h540a29.984 29.984 0 0 0 30.016-30.016v-89.984H784v120A60 60 0 0 1 724 992H124A60 60 0 0 1 64 932v-600C64 298.848 90.848 272 124 272h120v60H154.016a30.016 30.016 0 0 0-30.016 30.048z" p-id="10770"></path></svg>',
@@ -255,6 +262,59 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             main.dragControls = new THREE.DragControls(scensObjs, dgis3d.camera, dgis3d.renderer.domElement);
             main.dragControls.enabled = true;
         },
+        copy: function () {
+            if (main.cacheObjs.length == 0) {
+                layer.msg("请选选择需要复制的模型", { icon: 0 });
+            } else {
+                for (var n = main.cacheObjs.length - 1; n >= 0; n--) {
+                    var model = main.cacheObjs[n];
+
+                    for (var i = 0; i < main.datas.length; i++) {
+                        if (main.datas[i].name == model.mesh.name) {
+                            var data = main.datas[i];
+                            var url = "";
+                            if (data.geometry.type == "box") {
+                                url = "/pages/modeling/box.html";
+                            } else if (data.geometry.type == "cylinder") {
+                                url = "/pages/modeling/cylinder.html";
+                            } else if (data.geometry.type == "path") {
+                                url = "/pages/modeling/path.html";
+                            } else if (data.geometry.type == "obj") {
+                                url = "/pages/modeling/obj.html";
+                            }
+
+                            if (url != "") {
+                                var model = clone(data);
+                                main.copyModel(url, model);
+
+                                //值复制
+                                function clone(obj) {
+                                    //判断是对象，就进行循环复制
+                                    if (typeof obj === 'object' && typeof obj !== 'null') {
+                                        // 区分是数组还是对象，创建空的数组或对象
+                                        var o = Object.prototype.toString.call(obj).slice(8, -1) === "Array" ? [] : {};
+                                        for (var k in obj) {
+                                            // 如果属性对应的值为对象，则递归复制
+                                            if(typeof obj[k] === 'object' && typeof obj[k] !== 'null'){
+                                                o[k] = clone(obj[k])
+                                            }else{
+                                                o[k] = obj[k];
+                                            }
+                                        }
+                                    }else{ //不为对象，直接把值返回
+                                        return obj;
+                                    }
+                                    return o;
+                                }
+                            }
+
+                            break;
+                        }
+                    }
+                }
+
+            }
+        },
         control: function () {
             main.event = "control";
         },
@@ -285,10 +345,10 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
         },
         email: function () {
             layer.prompt({
-                title:"请输入邮箱地址",
+                title: "请输入邮箱地址",
                 formType: 0,
-                area: ['500px','300px']
-            },function (email, index) {
+                area: ['500px', '300px']
+            }, function (email, index) {
                 /*01 保存模型 */
                 var data = {
                     json: JSON.stringify(main.datas),
@@ -489,6 +549,56 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
     };
 
     /**
+     * 复制模型
+     * @param {*} url
+     * @param {*} model
+     */
+    main.copyModel = function (url, model) {
+        layer.open({
+            type: 2,
+            title: "复制模型",
+            area: ["550px", "400px"],
+            content: url,
+            btn: ['确定', '取消'],
+            success: function (layero, index) {
+                //将上一次选中的模型颜色还原
+                for (var i = 0; i < main.cacheObjs.length; i++) {
+                    var oldObj = main.cacheObjs[i];
+                    oldObj.mesh.material = oldObj.material;
+                }
+
+                //清空上次模型缓存
+                main.cacheObjs = [];
+
+                model.name = new Date().getTime();
+                if (main.dragControls != null) {
+                    main.dragControls.dispose();
+                    main.dragControls = null;
+                }
+
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                iframeWin.main.init(model);
+
+                $(".layui-layer").addClass("tech_box").append('<div class="lth corner" style="width: 20px;height: 4px;left: -2px;top:-2px;"></div>        <div class="ltv corner" style="width: 4px;height: 20px;left: -2px;top:-2px;"></div>        <div class="rth corner" style="width: 20px;height: 4px;right: -2px;top:-2px;"></div>        <div class="rtv corner" style="width: 4px;height: 20px;right: -2px;top:-2px;"></div>        <div class="lbh corner" style="width: 20px;height: 4px;left: -2px;bottom:-2px;"></div>        <div class="lbv corner" style="width: 4px;height: 20px;left: -2px;bottom:-2px;"></div>        <div class="rbh corner" style="width: 20px;height: 4px;right: -2px;bottom:-2px;"></div>        <div class="rbv corner" style="width: 4px;height: 20px;right: -2px;bottom:-2px;"></div> ');
+            },
+            yes: function (index, layero) {
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                var data = iframeWin.main.vueObj.Data;
+                var mesh = main.buildModel(data, function (obj) {
+                    dgis3d.scene.add(obj);
+                    main.datas.push(data);
+                    dgis3d.render();
+                });
+
+                layer.close(index);
+            },
+            btn2: function (index, layero) {
+                layer.close(index);
+            }
+        });
+    };
+
+    /**
      * 选择模型
      */
     main.selectModel = function (e) {
@@ -556,11 +666,11 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             case "obj":
                 dgis3d.geometry.model(data.geometry.l, data.geometry.w, data.geometry.h, data.material.path + ".mtl", data.material.path + ".obj", data.angle, data.position, function (obj) {
                     obj.name = data.name;
-                    for(var i=0;i<obj.children[0].children.length;i++){
-                        var child=obj.children[0].children[i];
-                        child.material.transparent= data.material.opacity < 1;
-                        child.material.opacity= data.material.opacity;
-                    }                    
+                    for (var i = 0; i < obj.children[0].children.length; i++) {
+                        var child = obj.children[0].children[i];
+                        child.material.transparent = data.material.opacity < 1;
+                        child.material.opacity = data.material.opacity;
+                    }
 
                     func(obj);
                     /*

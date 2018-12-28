@@ -45,6 +45,7 @@ define(function () {
                 }
             }
         }
+
         if (main.vueObj == null) {
             main.vueObj = new Vue({
                 el: "ul",
@@ -58,8 +59,6 @@ define(function () {
                     }
                 }
             });
-
-
         } else {
             main.vueObj.changeData(data);
         }
