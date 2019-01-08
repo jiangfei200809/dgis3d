@@ -5,29 +5,20 @@ define(function () {
     };
 
     main.init = function (data) {
-        var dgisUploader = new DgisUploader("uploadObjBtn", "/webapi/model/objUpload", false, function (result) {
-            if (result.Success) {
-                var item=result.Content[0];
-                main.vueObj.Data.material.path = "/Upload/"+item.md5+"/"+item.md5;
-                window.parent.main.changeModelProperty(main.vueObj.Data);
-            } else {
-                layer.msg("上传模型失败", { icon: 2 });
-            }
-        });
-
+        
         if (data == null) {
             data = {
-                name:"obj_"+ new Date().getTime(),
+                name:"light_"+ new Date().getTime(),
                 geometry: {
-                    type: "obj",
+                    type: "light",
                     l: 100,
-                    w: 100,
-                    h: 100,
-                    r: 0
-                },
+                    w: 0,
+                    h: 0,
+                    r: 1
+                },      
                 material: {
-                    type: "obj",
-                    color: "",
+                    type: "color",
+                    color: "white",
                     opacity: 1,
                     reflect: true,
                     path: "",
@@ -37,7 +28,7 @@ define(function () {
                     x: 0,
                     y: 0,
                     z: 0
-                },
+                },          
                 position: {
                     x: 0,
                     y: 0,

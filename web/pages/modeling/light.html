@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8>
+    <title>光属性</title>
+
+    <script src="../../assets/js/jquery-1.10.2.min.js"></script>
+    <script src="../../assets/js/vue.js"></script>
+    <script src="../../assets/js/esl.js"></script>
+
+    <link href="../../assets/css/modelProperty.css" rel="stylesheet" type="text/css" />
+
+    <script>
+        var main;
+        require(["/assets/modules/modeling/light"], function (light) {
+            main = light;
+        });
+    </script>
+
+</head>
+
+<body>
+    <ul>
+        <li>
+            <div class="fieldTitle">
+                基础属性
+            </div>
+        </li>
+        <li>
+            <div class="fieldName">颜色：</div>
+            <div class="fieldValue">
+                <input type="color" name="color" v-model="Data.material.color" v-on:change="changeValue" />
+            </div>
+        </li>
+        <li>
+            <div class="fieldName">强度：</div>
+            <div class="fieldValue">
+                <input type="text" name="r" v-model="Data.geometry.r" v-on:change="changeValue" />
+            </div>
+        </li>
+        <li>
+            <div class="fieldName">长度：</div>
+            <div class="fieldValue">
+                <input type="text" name="l" v-model="Data.geometry.l" v-on:change="changeValue" />
+            </div>
+        </li>
+        <li>
+            <div class="fieldTitle">
+                位置属性
+            </div>
+        </li>
+        <li>
+            <div class="fieldName">x：</div>
+            <div class="fieldValue">
+                <input type="text" name="x" v-model.number="Data.position.x" v-on:change="changeValue" />
+            </div>
+        </li>
+        <li>
+            <div class="fieldName">y：</div>
+            <div class="fieldValue">
+                <input type="text" name="y" v-model.number="Data.position.y" v-on:change="changeValue" />
+            </div>
+        </li>
+        <li>
+            <div class="fieldName">z：</div>
+            <div class="fieldValue">
+                <input type="text" name="z" v-model.number="Data.position.z" v-on:change="changeValue" />
+            </div>
+        </li>
+    </ul>
+</body>
+
+</html>

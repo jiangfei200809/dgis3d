@@ -63,13 +63,13 @@ body {
 
 #geometryIframe {
     width: 100%;
-    height: 600px;
+    height: 700px;
     border: none;
 }
 
 #materialIframe {
     width: 100%;
-    height: 450px;
+    height: 350px;
     border: none;
 }
 
@@ -148,7 +148,8 @@ body {
 
 .left_div {
     width: 350px;
-    height: calc(100% - 138px);
+    /*height: calc(100% - 138px);*/
+    height: 100%;
     background: url("/assets/images/left_bg.png");
     position: absolute;
     left: 0;
@@ -201,7 +202,7 @@ body {
 .tools_bar .tools_btn span {
     display: block;
     background: none;
-    color: darkslategray;
+    /*color: white;*/
 }
 
 .tools_bar .tools_btn span svg {
@@ -229,7 +230,7 @@ body {
 }
 
 .tools_bar a {
-    color: #434A54;
+    /*color: white;*/
     text-decoration: none;
     font-size: 12px;
     font-family: "Microsoft YaHei";
@@ -253,7 +254,7 @@ body {
 }
 
 .tools_btn span:hover {
-    color: white;
+    color: darkslategray;
 }
 .tools_bar label {
     color: #77777D;

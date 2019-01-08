@@ -55,6 +55,12 @@
             <input type="button" id="uploadBtn" value="上传"/>
         </div>
     </li>
+    <li class="img">
+        <div class="fieldName">重复：</div>
+        <div class="fieldValue">
+            <input v-for="(repeat,i) in Data.material.repeat" type="text" name="" v-model="Data.material.repeat[i]" v-on:change="changeValue" style="width: 30px;margin-right: 10px;"/>
+        </div>
+    </li>
     <li>
         <div class="fieldName">透明度：</div>
         <div class="fieldValue">

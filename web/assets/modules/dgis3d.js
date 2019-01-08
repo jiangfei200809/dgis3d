@@ -111,7 +111,7 @@ define(function () {
          *  @param {*} repeatX x重复量
          *  @param {*} repeatY y重复量
          */
-        bitmapMaterial: function (bitmapPath,opacity, repeatX, repeatY) {
+        bitmapMaterial: function (bitmapPath, opacity, repeatX, repeatY) {
             var texture = THREE.ImageUtils.loadTexture(bitmapPath, {}, function () {
                 texture.repeat.set(repeatX, repeatY);
                 texture.wrapS = THREE.RepeatWrapping;
@@ -188,7 +188,7 @@ define(function () {
          * 创建面
          */
         polygon: function (points) {
-            var area=main.geometry.computeArea(points);
+            var area = main.geometry.computeArea(points);
 
             var shape = new THREE.Shape();
             var point = points[0];
@@ -305,9 +305,9 @@ define(function () {
         /**
          * 计算范围
          */
-        computeArea:function(points){
-            var x=[];
-            var y=[];
+        computeArea: function (points) {
+            var x = [];
+            var y = [];
 
             for (var i = 1; i < points.length; i++) {
                 point = points[i];
@@ -315,16 +315,16 @@ define(function () {
                 y.push(point.y);
             }
 
-            var minX=Math.min.apply(Math,x);
-            var maxX=Math.max.apply(Math,x);
-            var minY=Math.min.apply(Math,y);
-            var maxY=Math.max.apply(Math,y);
+            var minX = Math.min.apply(Math, x);
+            var maxX = Math.max.apply(Math, x);
+            var minY = Math.min.apply(Math, y);
+            var maxY = Math.max.apply(Math, y);
 
             return {
-                minX:minX,
-                maxX:maxX,
-                minY:minY,
-                maxY:maxY
+                minX: minX,
+                maxX: maxX,
+                minY: minY,
+                maxY: maxY
             }
         },
 
@@ -399,6 +399,22 @@ define(function () {
 
             return geometry;
 
+        },
+        /**
+         * 查找模型
+         */
+        findMeshByName: function (name) {
+            var obj;
+            main.scene.children.forEach(child => {
+                //if (child instanceof THREE.Mesh) {
+                    if (child.name == name) {
+                        obj = child;
+                        return obj;
+                    }
+                //}
+            });
+
+            return obj;
         }
     };
 
@@ -466,8 +482,8 @@ define(function () {
                 var intersect = intersects[i];
                 if (intersect.object instanceof THREE.Mesh) {
                     var obj = intersect.object.parent;
-                    if(obj.name=="")
-                        obj=obj.parent;
+                    if (obj.name == "")
+                        obj = obj.parent;
                     obj.userData.distance = intersect.distance;
                     objs.push(obj);
                 }
