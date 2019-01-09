@@ -695,7 +695,9 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                 break;
             case "light":
                 var light = dgis3d.light.pointLight(data.position, data.material.color, data.geometry.r, data.geometry.l);
+                light.name=data.name;
                 func(light);
+                return;
                 break;
             case "obj":
                 dgis3d.geometry.model(data.geometry.l, data.geometry.w, data.geometry.h, data.material.path + ".mtl", data.material.path + ".obj", data.angle, data.position, function (obj) {
@@ -905,6 +907,9 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                             break;
                         }
                     }
+                    main.datas.sort(function(a,b){
+                        return a.name-b.name;
+                    });
                     
                     break;
                 }
@@ -921,6 +926,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
         var data = common.getItemInItems(main.datas, "name", model.name);
 
         //分类获取模型尺寸
+        var l=2,w=2,h=2;
         if (model.geometry instanceof THREE.BoxGeometry) {
             //box模型
             var box = new THREE.Box3();
@@ -933,6 +939,10 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             data.geometry.l = length;
             data.geometry.w = width;
             data.geometry.h = height;
+
+            l=length;
+            w=width;
+            h=height;
         } else if (model.geometry instanceof THREE.CylinderGeometry) {
             var length = model.geometry.parameters.height;
             var r = model.geometry.parameters.radialSegments;
@@ -941,12 +951,20 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             data.geometry.w = r * 2;
             data.geometry.h = length;
 
+            l=r*2;
+            w=r*2;
+            h=length;
+
             data.geometry.r = r;
+        } else if (model.geometry instanceof THREE.PointLight) {
+            l=2;
+            w=2;
+            h=2;
         }
 
         //获取位置
         var position = model.position;
-        position = dgis3d.geometry.restorePositon(position, data.geometry.l, data.geometry.w, data.geometry.h);
+        position = dgis3d.geometry.restorePositon(position, l,w,h);
         data.position = position;
 
         return data;
