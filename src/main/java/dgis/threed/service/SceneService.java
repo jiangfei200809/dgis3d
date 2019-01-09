@@ -14,10 +14,7 @@ import dgis.threed.web.util.FileHelper;
 import dgis.threed.web.util.ZipHelper;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class SceneService {
     private static SceneService _sceneService;
@@ -35,6 +32,18 @@ public class SceneService {
         }
 
         return _sceneService;
+    }
+
+    public  List<Scene> GetAll() {
+        String sql = "select * from Scene";
+        try {
+            List<Scene> items = _sqliteService.Query(sql, Scene.class);
+
+            return items;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     public Scene GetById(String id) {
@@ -100,7 +109,9 @@ public class SceneService {
                     while (true) {
                         if (!_emailQueue.isEmpty()) {
                             EmailQueueModel item = _emailQueue.poll();
-                            if (MailScene(item.getModelId(), item.getEmailAddress())) {
+                            System.out.println("准备发送id为:"+item.getModelId()+"的场景");
+                            boolean result=MailScene(item.getModelId(), item.getEmailAddress());
+                            if (result) {
 
                             } else {
                                 if (item.reCount < 2) {
@@ -191,7 +202,12 @@ public class SceneService {
 
             ToMail toMail = new ToMail(emailAddress, "DGIS3D在线场景模型推送", sb.toString(), files);
 
-            return emailService.Send(fromMail, toMail);
+            boolean result= emailService.Send(fromMail, toMail);
+            item.setEmailStatus(result?2:1);
+            if(result){
+                item.setEmailSendTime(new Date());
+            }
+            Update(item);
         }
         return true;
     }

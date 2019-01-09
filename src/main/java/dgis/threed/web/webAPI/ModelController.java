@@ -60,6 +60,9 @@ public class ModelController {
 
         boolean result=false;
         item.setCreateTime(new Date());
+        //设置邮件状态为0
+        item.setEmailStatus(0);
+
         if(item.getUid().isEmpty()){
             item.setUid(UUID.randomUUID().toString());
             result=SceneService.GetInstance().Add(item );
@@ -74,14 +77,25 @@ public class ModelController {
 
     /**
      * 场景发送邮件
-     * @param id
-     * @param email
+     * @param item
      * @return
      */
     @RequestMapping("/model/email")
-    public ResultObj Email(String id,String email){
-        SceneService.GetInstance().AddMailScene(id,email);
+    public ResultObj Email(Scene item){
+        SceneService.GetInstance().AddMailScene(item.getUid(),item.getEmail());
         ResultObj resultObj=new ResultObj(true,"请求已经提交队列",null,0,"");
+        return resultObj;
+    }
+
+    /**
+     * 删除场景
+     * @param id
+     * @return
+     */
+    @RequestMapping("/model/del")
+    public ResultObj Del(String id){
+        boolean result= SceneService.GetInstance().Del(id);
+        ResultObj resultObj=new ResultObj(result,"",null,0,"");
         return resultObj;
     }
 
@@ -91,11 +105,24 @@ public class ModelController {
      * @return
      */
     @RequestMapping("/model/get")
-    public ResultObj GetModels(String uid){
+    public ResultObj GetModel(String uid){
         ResultObj resultObj=new ResultObj(false,"",null,0,"");
         Scene item=SceneService.GetInstance().GetById(uid);
         resultObj.setSuccess(true);
         resultObj.setContent(item);
+        return resultObj;
+    }
+
+    /**
+     * 获取所有场景
+     * @return
+     */
+    @RequestMapping("/model/gets")
+    public ResultObj GetModels(){
+        ResultObj resultObj=new ResultObj(false,"",null,0,"");
+        List<Scene> items=SceneService.GetInstance().GetAll();
+        resultObj.setSuccess(items!=null);
+        resultObj.setContent(items);
         return resultObj;
     }
 }

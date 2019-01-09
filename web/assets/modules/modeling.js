@@ -315,8 +315,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
         save: function () {
             var data = {
                 json: JSON.stringify(main.datas),
-                uid: common.getUrlParam("id"),
-                email: "xdfsfds"
+                uid: common.getUrlParam("id")
             };
             syncRequest.post("/webapi/model/save", data, function (e) {
                 if (e.Success) {
@@ -339,29 +338,39 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                 /*01 保存模型 */
                 var data = {
                     json: JSON.stringify(main.datas),
-                    uid: common.getUrlParam("id")
+                    uid: common.getUrlParam("id"),
+                    email: email
                 };
                 syncRequest.post("/webapi/model/save", data, function (e) {
                     if (e.Success) {
+                        /*
                         var uid = e.Content;
                         var data = {
                             id: uid,
                             email: email
                         };
 
-                        /*02 发送邮件 */
+                        //02 发送邮件 
                         syncRequest.post("/webapi/model/email", data, function (e) {
                             layer.msg(e.Msg, { icon: 1 });
                         });
+                        */
+
+                        var id=common.getUrlParam("id");
+                        if(id==null){
+                            layer.msg("发送邮件请求成功，请在24小时内等待管理员审核。场景已经保存，即将跳转至您的模型页面，请注意收藏改页面", { icon: 1 });
+                            setTimeout(function () {
+                                window.location.href = "/?id=" + uid;
+                            }, 2000);
+                        }else{
+                            layer.msg("发送邮件请求成功，请在24小时内等待管理员审核", { icon: 1 });
+                        }                       
                     } else {
                         layer.msg("保存模型失败", { icon: 2 });
                     }
                 });
                 layer.close(index);
             });
-
-
-
         }
     };
 

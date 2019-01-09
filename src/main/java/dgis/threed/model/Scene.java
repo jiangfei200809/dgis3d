@@ -70,7 +70,9 @@ public class Scene {
 
     private String email;
 
-
+    /**
+     * 0：发送请求 1:发送失败 2:发送成功
+     */
     private Integer emailStatus;
 
     private Date emailSendTime;
