@@ -593,7 +593,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
     /**
      * 选择模型
      */
-    main.selectModel = function (e) {       
+    main.selectModel = function (e) {
         dgis3d.event.getMesh(e, function (obj) {
             //渲染
             var selectData = main.renderSelectModel(obj);
@@ -655,7 +655,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
      * 移除模型
      * @param {*} obj 
      */
-    main.removeModel=function(objs){
+    main.removeModel = function (objs) {
         for (var n = objs.length - 1; n >= 0; n--) {
             var model = objs[n];
             dgis3d.scene.remove(model.mesh);
@@ -695,7 +695,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                 break;
             case "light":
                 var light = dgis3d.light.pointLight(data.position, data.material.color, data.geometry.r, data.geometry.l);
-                light.name=data.name;
+                light.name = data.name;
                 func(light);
                 return;
                 break;
@@ -876,6 +876,19 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                     //main.cacheObjs.splice(i, 1);
                     main.cacheObjs = [];
 
+                    //缓存替换
+                    /*
+                    var oldData = common.getItemInItems(main.datas, "name", data.name);
+                    oldData = data;
+                    */
+                    for (var i = 0; i < main.datas.length; i++) {
+                        if (main.datas[i].name == data.name) {
+                            main.datas.splice(i, 1);
+                            main.datas.push(data);
+                            break;
+                        }
+                    }
+
                     //创建新模型
                     var newModel = main.buildModel(data, function (obj) {
                         dgis3d.scene.add(obj);
@@ -885,6 +898,13 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                         });
                         dgis3d.render();
                     });
+
+
+                    main.datas.sort(function (a, b) {
+                        return b.name - a.name;
+                    });
+
+                    break;
                     /*
                     if (newModel != null) {
                         dgis3d.scene.add(newModel);
@@ -895,23 +915,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                     }
                     */
 
-                    //缓存替换
-                    /*
-                    var oldData = common.getItemInItems(main.datas, "name", data.name);
-                    oldData = data;
-                    */
-                    for(var i=0;i<main.datas.length;i++){
-                        if(main.datas[i].name==data.name){
-                            main.datas.splice(i, 1);
-                            main.datas.push(data);
-                            break;
-                        }
-                    }
-                    main.datas.sort(function(a,b){
-                        return a.name-b.name;
-                    });
-                    
-                    break;
+
                 }
             }
         }
@@ -926,7 +930,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
         var data = common.getItemInItems(main.datas, "name", model.name);
 
         //分类获取模型尺寸
-        var l=2,w=2,h=2;
+        var l = 2, w = 2, h = 2;
         if (model.geometry instanceof THREE.BoxGeometry) {
             //box模型
             var box = new THREE.Box3();
@@ -940,9 +944,9 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             data.geometry.w = width;
             data.geometry.h = height;
 
-            l=length;
-            w=width;
-            h=height;
+            l = length;
+            w = width;
+            h = height;
         } else if (model.geometry instanceof THREE.CylinderGeometry) {
             var length = model.geometry.parameters.height;
             var r = model.geometry.parameters.radialSegments;
@@ -951,20 +955,24 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             data.geometry.w = r * 2;
             data.geometry.h = length;
 
-            l=r*2;
-            w=r*2;
-            h=length;
+            l = r * 2;
+            w = r * 2;
+            h = length;
 
             data.geometry.r = r;
-        } else if (model.geometry instanceof THREE.PointLight) {
-            l=2;
-            w=2;
-            h=2;
+        } else if (model.geometry == null && model instanceof THREE.PointLight) {
+            l = 2;
+            w = 2;
+            h = 2;
+        } else {
+            l = data.geometry.l;
+            w = data.geometry.w;
+            h = data.geometry.h;
         }
 
         //获取位置
         var position = model.position;
-        position = dgis3d.geometry.restorePositon(position, l,w,h);
+        position = dgis3d.geometry.restorePositon(position, l, w, h);
         data.position = position;
 
         return data;

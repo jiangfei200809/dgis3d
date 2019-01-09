@@ -8,7 +8,7 @@ define(function () {
         
         if (data == null) {
             data = {
-                name:"light_"+ new Date().getTime(),
+                name:new Date().getTime(),
                 geometry: {
                     type: "light",
                     l: 100,
