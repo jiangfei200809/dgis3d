@@ -77,7 +77,7 @@ THREE.DragControls = function (_objects, _camera, _domElement) {
 
             }
 
-            scope.dispatchEvent({type: 'drag', object: _selected});
+            scope.dispatchEvent({ type: 'drag', object: _selected });
 
             return;
 
@@ -89,14 +89,14 @@ THREE.DragControls = function (_objects, _camera, _domElement) {
 
         if (intersects.length > 0) {
 
-            var object = intersects[0].object;            
+            var object = intersects[0].object;
 
             _plane.setFromNormalAndCoplanarPoint(_camera.getWorldDirection(_plane.normal), object.position);
-            
+
 
             if (_hovered !== object) {
 
-                scope.dispatchEvent({type: 'hoveron', object: object});
+                scope.dispatchEvent({ type: 'hoveron', object: object });
 
                 _domElement.style.cursor = 'pointer';
                 _hovered = object;
@@ -106,7 +106,7 @@ THREE.DragControls = function (_objects, _camera, _domElement) {
 
             if (_hovered !== null) {
 
-                scope.dispatchEvent({type: 'hoveroff', object: _hovered});
+                scope.dispatchEvent({ type: 'hoveroff', object: _hovered });
 
                 _domElement.style.cursor = 'auto';
                 _hovered = null;
@@ -129,9 +129,8 @@ THREE.DragControls = function (_objects, _camera, _domElement) {
 
             _selected = intersects[0].object;
             //为了适应使用了group的外部模型和path拉伸模型，选中对象修改为最外层容器
-            if(!(_selected.parent instanceof THREE.Scene))
-            {                   
-                _selected=_selected.parent.parent;
+            if (!(_selected.parent instanceof THREE.Scene)) {
+                _selected = _selected.parent.parent;
             }
 
             if (_raycaster.ray.intersectPlane(_plane, _intersection)) {
@@ -142,7 +141,7 @@ THREE.DragControls = function (_objects, _camera, _domElement) {
 
             _domElement.style.cursor = 'move';
 
-            scope.dispatchEvent({type: 'dragstart', object: _selected});
+            scope.dispatchEvent({ type: 'dragstart', object: _selected });
 
         }
 
@@ -154,10 +153,12 @@ THREE.DragControls = function (_objects, _camera, _domElement) {
         event.preventDefault();
 
         if (_selected) {
-            scope.dispatchEvent({type: 'dragend', object: _selected});
+            scope.dispatchEvent({ type: 'dragend', object: _selected });
 
-            console.log("1:"+_selected.position.x);
-            
+            //todo:同步模型数据
+            debugger;
+            var data = main.syncModelProperty(_selected);
+
             _selected = null;
         }
 
@@ -185,7 +186,7 @@ THREE.DragControls = function (_objects, _camera, _domElement) {
 
             }
 
-            scope.dispatchEvent({type: 'drag', object: _selected});
+            scope.dispatchEvent({ type: 'drag', object: _selected });
 
             return;
 
@@ -211,9 +212,8 @@ THREE.DragControls = function (_objects, _camera, _domElement) {
 
             _selected = intersects[0].object;
             //为了适应使用了group的外部模型和path拉伸模型，选中对象修改为最外层容器
-            if(!(_selected.parent instanceof THREE.Scene))
-            {                   
-                _selected=_selected.parent.parent;
+            if (!(_selected.parent instanceof THREE.Scene)) {
+                _selected = _selected.parent.parent;
             }
 
             _plane.setFromNormalAndCoplanarPoint(_camera.getWorldDirection(_plane.normal), _selected.position);
@@ -226,7 +226,7 @@ THREE.DragControls = function (_objects, _camera, _domElement) {
 
             _domElement.style.cursor = 'move';
 
-            scope.dispatchEvent({type: 'dragstart', object: _selected});
+            scope.dispatchEvent({ type: 'dragstart', object: _selected });
 
         }
 
@@ -239,7 +239,7 @@ THREE.DragControls = function (_objects, _camera, _domElement) {
 
         if (_selected) {
 
-            scope.dispatchEvent({type: 'dragend', object: _selected});
+            scope.dispatchEvent({ type: 'dragend', object: _selected });
 
             _selected = null;
 
@@ -284,7 +284,7 @@ THREE.DragControls = function (_objects, _camera, _domElement) {
     this.notify = function (type) {
 
         console.error('THREE.DragControls: notify() has been deprecated. Use dispatchEvent() instead.');
-        scope.dispatchEvent({type: type});
+        scope.dispatchEvent({ type: type });
 
     };
 
