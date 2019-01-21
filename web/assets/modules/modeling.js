@@ -16,15 +16,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             techBox.renderByDomClass("dgisBox");
             $(".right_div").css("display", "none");
 
-            //时间提示
-            setInterval(function () {
-                date = new Date();
-                var minute = date.getMinutes();
-                var seconds = date.getSeconds();
-
-                $("#time").text(date.getHours() + ":" + (minute < 10 ? "0" : "") + minute + ":" + (seconds < 10 ? "0" : "") + seconds);
-                $("#date").text(date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate());
-            }, 1000);
+            
 
             //工具栏
             main.initToolbar();
@@ -51,6 +43,10 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                 syncRequest.get("/webapi/model/get?uid=" + uid, null, function (e) {
                     if (e.Success) {
                         main.datas = JSON.parse(e.Content.json);
+                        main.datas = main.datas.sort(function (a, b) {
+                            return b.name - a.name;
+                        });
+
                         for (var i = 0; i < main.datas.length; i++) {
                             var mesh = main.buildModel(main.datas[i], function (obj) {
                                 dgis3d.scene.add(obj);
@@ -64,8 +60,6 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                     }
                 });
             }
-
-
         }).on("click", function (e) {
             main.orbitControls.enabled = true;
             if (main.event != "move" && main.dragControls != null) {
@@ -319,11 +313,16 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             };
             syncRequest.post("/webapi/model/save", data, function (e) {
                 if (e.Success) {
-                    var uid = e.Content;
-                    layer.msg("保存模型成功，即将跳转至您的模型页面，请注意收藏改页面", { icon: 1 });
-                    setTimeout(function () {
-                        window.location.href = "/?id=" + uid;
-                    }, 2000);
+                    var id = common.getUrlParam("id");
+                    if (id == null) {
+                        var uid = e.Content;
+                        layer.msg("保存模型成功，即将跳转至您的模型页面，请注意收藏改页面", { icon: 1 });
+                        setTimeout(function () {
+                            window.location.href = "/?id=" + uid;
+                        }, 2000);
+                    } else {
+                        layer.msg("保存模型成功", { icon: 1 });
+                    }
                 } else {
                     layer.msg("保存模型失败", { icon: 2 });
                 }
@@ -335,6 +334,25 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                 formType: 0,
                 area: ['500px', '300px']
             }, function (email, index) {
+                if (!checkEmail(email)) {
+                    layer.msg("请输入正确的邮箱地址", { icon: 2 });
+                    return;
+                }
+
+                /**
+                 * 检查邮箱格式
+                 */
+                function checkEmail(email) {
+                    var reg = new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$"); //正则表达式
+                    if (email === "") { //输入不能为空
+                        return false;
+                    } else if (!reg.test(email)) { //正则验证不通过，格式不对
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+
                 /*01 保存模型 */
                 var data = {
                     json: JSON.stringify(main.datas),
@@ -343,28 +361,15 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                 };
                 syncRequest.post("/webapi/model/save", data, function (e) {
                     if (e.Success) {
-                        /*
-                        var uid = e.Content;
-                        var data = {
-                            id: uid,
-                            email: email
-                        };
-
-                        //02 发送邮件 
-                        syncRequest.post("/webapi/model/email", data, function (e) {
-                            layer.msg(e.Msg, { icon: 1 });
-                        });
-                        */
-
-                        var id=common.getUrlParam("id");
-                        if(id==null){
-                            layer.msg("发送邮件请求成功，请在24小时内等待管理员审核。场景已经保存，即将跳转至您的模型页面，请注意收藏改页面", { icon: 1 });
+                        var id = common.getUrlParam("id");
+                        if (id == null) {
+                            layer.msg("发送邮件请求成功，请在24小时内等待管理员审核", { icon: 1 });
                             setTimeout(function () {
                                 window.location.href = "/?id=" + uid;
                             }, 2000);
-                        }else{
+                        } else {
                             layer.msg("发送邮件请求成功，请在24小时内等待管理员审核", { icon: 1 });
-                        }                       
+                        }
                     } else {
                         layer.msg("保存模型失败", { icon: 2 });
                     }
@@ -419,7 +424,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
         for (var i = 0; i < models.length; i++) {
             var model = models[i];
 
-            var li = "<li><a href=\"javascript:void(0)\" onclick=\"main.newModel('创建" + model.text + "','" + model.url + "')\">";
+            var li = "<li><a href=\"javascript:void(0)\" onclick=\"main.newModel('" + model.text + "','" + model.url + "')\">";
             li += model.svg;
             li += "<div>";
             li += model.text;
@@ -535,11 +540,16 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             yes: function (index, layero) {
                 var iframeWin = window[layero.find('iframe')[0]['name']];
                 var data = iframeWin.main.vueObj.Data;
-                var mesh = main.buildModel(data, function (obj) {
-                    dgis3d.scene.add(obj);
-                    main.datas.push(data);
-                    dgis3d.render();
-                });
+
+                try {
+                    var mesh = main.buildModel(data, function (obj) {
+                        dgis3d.scene.add(obj);
+                        main.datas.push(data);
+                        dgis3d.render();
+                    });
+                } catch (e) {
+
+                }
 
                 layer.close(index);
             },
@@ -655,7 +665,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
             }
         }
 
-        dgis3d.render();
+        //dgis3d.render();
 
         return selectData;
     };
@@ -855,6 +865,18 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
         }
 
         //显示基本属性
+
+        var el = document.getElementById("geometryIframe"),
+            iframe = el.contentWindow;
+        if (el) {
+            try {
+                iframe.document.write('');
+                iframe.document.clear();
+            } catch (e) {
+            };
+            //以上可以清除大部分的内存和文档节点记录数了 
+        }
+
         var iframe = document.getElementById("geometryIframe");
         iframe.src = url;
         if (iframe.attachEvent) {
@@ -908,8 +930,7 @@ define(["/assets/modules/dgis3d"], function (dgis3d) {
                         dgis3d.render();
                     });
 
-
-                    main.datas.sort(function (a, b) {
+                    main.datas = main.datas.sort(function (a, b) {
                         return b.name - a.name;
                     });
 

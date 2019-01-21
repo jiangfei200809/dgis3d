@@ -19,7 +19,11 @@ import java.util.*;
 public class SceneService {
     private static SceneService _sceneService;
 
+    //邮件队列
     private static Queue<EmailQueueModel> _emailQueue;
+
+    //临时队列
+    private static Queue<EmailQueueModel> _cacheEmailQueue;
 
     private Task _task;
 
@@ -29,6 +33,7 @@ public class SceneService {
         if (_sceneService == null) {
             _sceneService = new SceneService();
             _emailQueue = new LinkedList();
+            _cacheEmailQueue=new LinkedList<>();
         }
 
         return _sceneService;
@@ -89,6 +94,10 @@ public class SceneService {
         }
     }
 
+    public int GetQueueCount(){
+        return _emailQueue.size();
+    }
+
     /**
      * 邮件请求放入队列
      *
@@ -96,43 +105,20 @@ public class SceneService {
      * @param emailAddress
      */
     public void AddMailScene(String id, String emailAddress) {
-        _emailQueue.add(new EmailQueueModel(id, emailAddress, 0));
-        if (_task == null) {
-            _task = new Task() {
-                @Override
-                public void cancel() {
+        EmailQueueModel model=new EmailQueueModel(id, emailAddress, 0);
+        if(!_emailQueue.contains(model))
+            _emailQueue.add(model);
+    }
 
-                }
-
-                @Override
-                public void run() {
-                    while (true) {
-                        if (!_emailQueue.isEmpty()) {
-                            EmailQueueModel item = _emailQueue.poll();
-                            System.out.println("准备发送id为:"+item.getModelId()+"的场景");
-                            boolean result=MailScene(item.getModelId(), item.getEmailAddress());
-                            if (result) {
-
-                            } else {
-                                if (item.reCount < 2) {
-                                    //放到最后，过期自动发送
-                                    item.reCount++;
-                                    _emailQueue.add(item);
-                                }
-                            }
-                        }
-
-                        //休息3秒
-                        try {
-                            Thread.sleep(3000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            };
-            _task.run();
-        }
+    /**
+     * 添加临时邮件队列
+     * @param id
+     * @param emailAddress
+     */
+    public void AddCacheMailScene(String id,String  emailAddress){
+        EmailQueueModel model=new EmailQueueModel(id, emailAddress, 0);
+        if(!_cacheEmailQueue.contains(model))
+            _cacheEmailQueue.add(model);
     }
 
     /**
@@ -210,6 +196,60 @@ public class SceneService {
             Update(item);
         }
         return true;
+    }
+
+    /**
+     * 开启邮件发送线程
+     */
+    public void StartMailScene(){
+        if (_task == null) {
+            _task = new Task() {
+                @Override
+                public void cancel() {
+
+                }
+
+                @Override
+                public void run() {
+                    System.out.println("邮件发送线程开启...");
+                    while (true) {
+                        if (!_emailQueue.isEmpty()) {
+                            EmailQueueModel item = _emailQueue.poll();
+                            System.out.println("准备发送id为:"+item.getModelId()+"的场景");
+                            boolean result=MailScene(item.getModelId(), item.getEmailAddress());
+
+                            Scene scene=GetById(item.getModelId());
+                            if (result) {
+                                scene.setEmailStatus(2);
+                            } else {
+                                if (item.reCount < 2) {
+                                    //放到最后，过期自动发送
+                                    item.reCount++;
+                                    _emailQueue.add(item);
+                                    scene.setEmailStatus(1);
+                                }
+                            }
+
+                            //更新发送状态
+                            Update(scene);
+                        }else{
+                            if(!_cacheEmailQueue.isEmpty()){
+                                EmailQueueModel item = _cacheEmailQueue.poll();
+                                _emailQueue.add(item);
+                            }
+                        }
+
+                        //休息3秒
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+            _task.run();
+        }
     }
 
     class EmailQueueModel {

@@ -1,5 +1,6 @@
 package dgis.threed.common;
 
+import dgis.threed.service.SceneService;
 import dgis.threed.web.util.XMLHelper;
 
 import java.util.Map;
@@ -43,5 +44,8 @@ public class Config {
         WebPath = map.get("WebPath").toString();
         DesKey = map.get("DesKey").toString();
         LoginOutTime = Integer.parseInt(map.get("LoginOutTime").toString());
+
+        //开启邮件发送线程
+        SceneService.GetInstance().StartMailScene();
     }
 }

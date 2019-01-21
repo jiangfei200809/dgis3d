@@ -10,8 +10,8 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 public class WebApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
-        Config.Init();
         SpringApplication.run(WebApplication.class, args);
+        Config.Init();
     }
 
     @Override
