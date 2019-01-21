@@ -178,7 +178,7 @@ public class SceneService {
 
             //发送邮件
             EmailService emailService = EmailService.GetInstance();
-            FromMail fromMail = new FromMail("jiangfei1990@hotmail.com", "jiangfei628441", "88GIS-DGIS3D", "smtp.office365.com", 587, true);
+            FromMail fromMail = new FromMail("dgis3d@hotmail.com", "jiangfei628441", "88GIS/DGIS3D三维建模平台", "smtp.office365.com", 587, true);
             List<String> files = new ArrayList<>();
             files.add(zipPath);
             StringBuffer sb = new StringBuffer();
@@ -218,20 +218,16 @@ public class SceneService {
                             System.out.println("准备发送id为:"+item.getModelId()+"的场景");
                             boolean result=MailScene(item.getModelId(), item.getEmailAddress());
 
-                            Scene scene=GetById(item.getModelId());
                             if (result) {
-                                scene.setEmailStatus(2);
+
                             } else {
                                 if (item.reCount < 2) {
                                     //放到最后，过期自动发送
                                     item.reCount++;
                                     _emailQueue.add(item);
-                                    scene.setEmailStatus(1);
                                 }
                             }
 
-                            //更新发送状态
-                            Update(scene);
                         }else{
                             if(!_cacheEmailQueue.isEmpty()){
                                 EmailQueueModel item = _cacheEmailQueue.poll();
